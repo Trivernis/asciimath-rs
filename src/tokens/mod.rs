@@ -46,7 +46,8 @@ pub enum Operation {
 
 #[derive(Debug, Clone)]
 pub enum Misc {
-    Frac,
+    AsciiFrac,
+    LatexFrac,
     Pow,
     Sqrt,
     Root,
@@ -73,13 +74,15 @@ pub enum Misc {
     Square,
     LFloor,
     RFloor,
+    LCeiling,
     RCeiling,
     Complex,
     Natural,
     Rational,
     Real,
     Integer,
-    Text,
+    AsciiText,
+    LatexText,
 }
 
 #[derive(Debug, Clone)]
