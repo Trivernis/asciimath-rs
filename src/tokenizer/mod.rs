@@ -1,11 +1,12 @@
 use crate::tokens::constants::TokenPattern;
 use crate::tokens::mappings::{
-    get_arrow_mapping, get_grouping_mappings, get_logical_mappings, get_misc_mappings,
-    get_operation_mappings, get_relation_mapping,
+    get_accent_mapping, get_arrow_mapping, get_grouping_mappings, get_logical_mappings,
+    get_misc_mappings, get_operation_mappings, get_relation_mapping,
 };
-use crate::tokens::{Arrow, Grouping, Logical, Misc, Operation, Relation, Token};
+use crate::tokens::{Accent, Arrow, Grouping, Logical, Misc, Operation, Relation, Token};
 use charred::tapemachine::CharTapeMachine;
 use std::collections::HashMap;
+use std::fmt::Debug;
 
 pub struct Tokenizer {
     ctm: CharTapeMachine,
@@ -99,6 +100,20 @@ impl Tokenizer {
             static ref ARROW_MAPPINGS: Vec<HashMap<TokenPattern, Arrow>> = get_arrow_mapping();
         }
         for mapping in ARROW_MAPPINGS.iter() {
+            for key in mapping.keys() {
+                if self.ctm.check_any_str_sequence(*key) {
+                    return Some(mapping[key].clone());
+                }
+            }
+        }
+        None
+    }
+
+    fn parse_accent(&mut self) -> Option<Accent> {
+        lazy_static! {
+            static ref ACCENT_MAPPING: Vec<HashMap<TokenPattern, Accent>> = get_accent_mapping();
+        }
+        for mapping in ACCENT_MAPPING.iter() {
             for key in mapping.keys() {
                 if self.ctm.check_any_str_sequence(*key) {
                     return Some(mapping[key].clone());

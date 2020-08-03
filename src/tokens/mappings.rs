@@ -1,3 +1,4 @@
+use crate::tokens::constants::accents::*;
 use crate::tokens::constants::arrows::*;
 use crate::tokens::constants::grouping::*;
 use crate::tokens::constants::logical::*;
@@ -6,7 +7,7 @@ use crate::tokens::constants::operations::*;
 use crate::tokens::constants::relations::*;
 
 use crate::tokens::constants::TokenPattern;
-use crate::tokens::{Arrow, Grouping, Logical, Misc, Operation, Relation};
+use crate::tokens::{Accent, Arrow, Grouping, Logical, Misc, Operation, Relation};
 use std::cell::RefCell;
 use std::collections::HashMap;
 
@@ -190,4 +191,21 @@ pub fn get_arrow_mapping() -> Vec<HashMap<TokenPattern, Arrow>> {
             G_BIGLEFTRIGHTARROW => Arrow::BigLeftRightArrow,
         },
     ]
+}
+
+pub fn get_accent_mapping() -> Vec<HashMap<TokenPattern, Accent>> {
+    vec![hashmap! {
+        G_HAT => Accent::Hat,
+        G_UNDERLINE => Accent::Underline,
+        G_OVERLINE => Accent::Overline,
+        G_VEC => Accent::Vec,
+        G_DOT => Accent::Dot,
+        G_DDOT => Accent::DDot,
+        G_OVERSET => Accent::OverSet,
+        G_UNDERSET => Accent::UnderSet,
+        G_UNDERBRACE => Accent::UnderBrace,
+        G_OVERBRACE => Accent::OverBrace,
+        G_COLOR => Accent::Color,
+        G_CANCEL => Accent::Cancel,
+    }]
 }
