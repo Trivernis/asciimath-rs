@@ -1,0 +1,13 @@
+pub const G_UPARROW: &'static[&str] = &["uarr", "uparrow"];
+pub const G_DOWNARROW: &'static[&str] = &["darr", "downarrow"];
+pub const G_RIGHTARROW: &'static[&str] = &["rarr", "rightarrow"];
+pub const G_TO: &'static[&str] = &["->", "to"];
+pub const G_RIGHTARROWTAIL: &'static[&str] = &[">->", "rightarrowtail"];
+pub const G_TWOHEADRIGHTARROW: &'static[&str] = &["->>", "twoheadrightarrow"];
+pub const G_TWOHEADRIGHTARROWTAIL: &'static[&str]= &[">->>", "twoheadrightarrowtail"];
+pub const G_MAPSTO: &'static[&str] = &["|->", "mapsto"];
+pub const G_LEFTARROW: &'static[&str] = &["larr", "leftarrow"];
+pub const G_LEFTRIGHTARROW: &'static[&str] = &["harr", "leftrightarrow"];
+pub const G_BIGRIGHTARROW: &'static[&str] = &["rArr", "Rightarrow"];
+pub const G_BIGLEFTARROW: &'static[&str]= &["lArr", "Leftarrow"];
+pub const G_BIGLEFTRIGHTARROW: &'static[&str] = &["hArr", "Leftrightarrow"];
