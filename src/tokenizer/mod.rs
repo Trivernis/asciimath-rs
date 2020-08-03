@@ -1,9 +1,12 @@
 use crate::tokens::constants::TokenPattern;
 use crate::tokens::mappings::{
-    get_accent_mappings, get_arrow_mapping, get_greek_mappings, get_grouping_mappings,
-    get_logical_mappings, get_misc_mappings, get_operation_mappings, get_relation_mapping,
+    get_accent_mappings, get_arrow_mapping, get_font_mappings, get_greek_mappings,
+    get_grouping_mappings, get_logical_mappings, get_misc_mappings, get_operation_mappings,
+    get_relation_mapping,
 };
-use crate::tokens::{Accent, Arrow, Greek, Grouping, Logical, Misc, Operation, Relation, Token};
+use crate::tokens::{
+    Accent, Arrow, FontCommand, Greek, Grouping, Logical, Misc, Operation, Relation, Token,
+};
 use charred::tapemachine::CharTapeMachine;
 use std::collections::HashMap;
 use std::fmt::Debug;
@@ -130,6 +133,20 @@ impl Tokenizer {
         for mapping in GREEK_MAPPINGS.iter() {
             for key in mapping.keys() {
                 if self.ctm.check_any_str_sequence(*key) {
+                    return Some(mapping[key].clone());
+                }
+            }
+        }
+        None
+    }
+
+    fn parse_font_command(&mut self) -> Option<FontCommand> {
+        lazy_static! {
+            static ref FONTC_MAPPING: Vec<HashMap<&'static str, FontCommand>> = get_font_mappings();
+        }
+        for mapping in FONTC_MAPPING.iter() {
+            for key in mapping.keys() {
+                if self.ctm.check_str_sequence(*key) {
                     return Some(mapping[key].clone());
                 }
             }

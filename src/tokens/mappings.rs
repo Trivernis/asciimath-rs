@@ -1,5 +1,6 @@
 use crate::tokens::constants::accents::*;
 use crate::tokens::constants::arrows::*;
+use crate::tokens::constants::font_commands::*;
 use crate::tokens::constants::greek::*;
 use crate::tokens::constants::grouping::*;
 use crate::tokens::constants::logical::*;
@@ -8,7 +9,9 @@ use crate::tokens::constants::operations::*;
 use crate::tokens::constants::relations::*;
 
 use crate::tokens::constants::TokenPattern;
-use crate::tokens::{Accent, Arrow, Greek, Grouping, Logical, Misc, Operation, Relation};
+use crate::tokens::{
+    Accent, Arrow, FontCommand, Greek, Grouping, Logical, Misc, Operation, Relation,
+};
 use std::cell::RefCell;
 use std::collections::HashMap;
 
@@ -250,4 +253,19 @@ pub fn get_greek_mappings() -> Vec<HashMap<TokenPattern, Greek>> {
         G_OMEGA => Greek::Omega,
         G_BIGOMEGA => Greek::BigOmega,
     }]
+}
+
+pub fn get_font_mappings() -> Vec<HashMap<&'static str, FontCommand>> {
+    vec![
+        hashmap! {
+            F_BBB => FontCommand::BigOutline
+        },
+        hashmap! {
+            F_BB => FontCommand::Big,
+            F_CC => FontCommand::Cursive,
+            F_TT => FontCommand::TText,
+            F_FR => FontCommand::Fr,
+            F_SF => FontCommand::SansSerif,
+        },
+    ]
 }
