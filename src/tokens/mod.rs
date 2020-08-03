@@ -1,5 +1,7 @@
 pub mod constants;
+pub mod mappings;
 
+#[derive(Debug, Clone)]
 pub enum Token {
     Operation(Operation),
     Misc(Misc),
@@ -12,6 +14,7 @@ pub enum Token {
     Font(FontCommand),
 }
 
+#[derive(Debug, Clone)]
 pub enum Operation {
     Plus,
     Minus,
@@ -41,6 +44,7 @@ pub enum Operation {
     BigCup,
 }
 
+#[derive(Debug, Clone)]
 pub enum Misc {
     Frac,
     Pow,
@@ -78,6 +82,7 @@ pub enum Misc {
     Text,
 }
 
+#[derive(Debug, Clone)]
 pub enum Relation {
     Eq,
     Ne,
@@ -101,6 +106,7 @@ pub enum Relation {
     PropTo,
 }
 
+#[derive(Debug, Clone)]
 pub enum Logical {
     And,
     Or,
@@ -115,6 +121,7 @@ pub enum Logical {
     Models,
 }
 
+#[derive(Debug, Clone)]
 pub enum Grouping {
     RParen,
     LParen,
@@ -132,6 +139,7 @@ pub enum Grouping {
     Norm,
 }
 
+#[derive(Debug, Clone)]
 pub enum Arrow {
     UpArrow,
     DownArrow,
@@ -148,6 +156,7 @@ pub enum Arrow {
     BigLeftRightArrow,
 }
 
+#[derive(Debug, Clone)]
 pub enum Accent {
     Hat,
     Overline,
@@ -163,6 +172,7 @@ pub enum Accent {
     Cancel,
 }
 
+#[derive(Debug, Clone)]
 pub enum Greek {
     Alpha,
     Beta,
@@ -200,6 +210,7 @@ pub enum Greek {
     Omega,
 }
 
+#[derive(Debug, Clone)]
 pub enum FontCommand {
     Big,
     BigOutline,

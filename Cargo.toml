@@ -7,4 +7,6 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-charred = "0.2.2"
+charred = "0.3.0"
+maplit = "1.0.2"
+lazy_static = "1.4.0"
