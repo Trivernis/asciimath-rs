@@ -1,10 +1,12 @@
+use crate::tokens::constants::arrows::*;
 use crate::tokens::constants::grouping::*;
 use crate::tokens::constants::logical::*;
 use crate::tokens::constants::misc::*;
 use crate::tokens::constants::operations::*;
 use crate::tokens::constants::relations::*;
+
 use crate::tokens::constants::TokenPattern;
-use crate::tokens::{Grouping, Logical, Misc, Operation, Relation};
+use crate::tokens::{Arrow, Grouping, Logical, Misc, Operation, Relation};
 use std::cell::RefCell;
 use std::collections::HashMap;
 
@@ -164,6 +166,28 @@ pub fn get_grouping_mappings() -> Vec<HashMap<TokenPattern, Grouping>> {
             G_FLOOR => Grouping::Floor,
             G_CEIL => Grouping::Ceil,
             G_NORM => Grouping::Norm,
+        },
+    ]
+}
+
+pub fn get_arrow_mapping() -> Vec<HashMap<TokenPattern, Arrow>> {
+    vec![
+        hashmap! {
+            G_TWOHEADRIGHTARROW => Arrow::TwoHeadRightArrow,
+            G_TWOHEADRIGHTARROWTAIL => Arrow::TwoHeadRightArrowTail
+        },
+        hashmap! {
+            G_UPARROW => Arrow::UpArrow,
+            G_DOWNARROW => Arrow::DownArrow,
+            G_RIGHTARROW => Arrow::RightArrow,
+            G_TO => Arrow::To,
+            G_RIGHTARROWTAIL => Arrow::RightArrowTail,
+            G_MAPSTO => Arrow::MapsTo,
+            G_LEFTARROW => Arrow::LeftArrow,
+            G_LEFTRIGHTARROW => Arrow::LeftRightArrow,
+            G_BIGRIGHTARROW => Arrow::BigRightArrow,
+            G_BIGLEFTARROW => Arrow::BigLeftArrow,
+            G_BIGLEFTRIGHTARROW => Arrow::BigLeftRightArrow,
         },
     ]
 }

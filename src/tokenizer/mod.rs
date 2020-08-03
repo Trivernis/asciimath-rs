@@ -1,9 +1,9 @@
 use crate::tokens::constants::TokenPattern;
 use crate::tokens::mappings::{
-    get_grouping_mappings, get_logical_mappings, get_misc_mappings, get_operation_mappings,
-    get_relation_mapping,
+    get_arrow_mapping, get_grouping_mappings, get_logical_mappings, get_misc_mappings,
+    get_operation_mappings, get_relation_mapping,
 };
-use crate::tokens::{Grouping, Logical, Misc, Operation, Relation, Token};
+use crate::tokens::{Arrow, Grouping, Logical, Misc, Operation, Relation, Token};
 use charred::tapemachine::CharTapeMachine;
 use std::collections::HashMap;
 
@@ -85,6 +85,20 @@ impl Tokenizer {
                 get_grouping_mappings();
         }
         for mapping in GROUPING_MAPPINGS.iter() {
+            for key in mapping.keys() {
+                if self.ctm.check_any_str_sequence(*key) {
+                    return Some(mapping[key].clone());
+                }
+            }
+        }
+        None
+    }
+
+    fn parse_arrows(&mut self) -> Option<Arrow> {
+        lazy_static! {
+            static ref ARROW_MAPPINGS: Vec<HashMap<TokenPattern, Arrow>> = get_arrow_mapping();
+        }
+        for mapping in ARROW_MAPPINGS.iter() {
             for key in mapping.keys() {
                 if self.ctm.check_any_str_sequence(*key) {
                     return Some(mapping[key].clone());
