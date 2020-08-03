@@ -1,7 +1,9 @@
+use crate::tokens::constants::TokenPattern;
 use crate::tokens::mappings::{
-    get_logical_mappings, get_misc_mappings, get_operation_mappings, get_relation_mapping,
+    get_grouping_mappings, get_logical_mappings, get_misc_mappings, get_operation_mappings,
+    get_relation_mapping,
 };
-use crate::tokens::{Logical, Misc, Operation, Relation, Token};
+use crate::tokens::{Grouping, Logical, Misc, Operation, Relation, Token};
 use charred::tapemachine::CharTapeMachine;
 use std::collections::HashMap;
 
@@ -20,8 +22,7 @@ impl Tokenizer {
 
     fn parse_misc(&mut self) -> Option<Misc> {
         lazy_static! {
-            static ref MISC_MAPPINGS: Vec<HashMap<&'static [&'static str], Misc>> =
-                get_misc_mappings();
+            static ref MISC_MAPPINGS: Vec<HashMap<TokenPattern, Misc>> = get_misc_mappings();
         }
         for mapping in MISC_MAPPINGS.iter() {
             for key in mapping.keys() {
@@ -35,7 +36,7 @@ impl Tokenizer {
 
     fn parse_operation(&mut self) -> Option<Operation> {
         lazy_static! {
-            static ref OPERATION_MAPPINGS: Vec<HashMap<&'static [&'static str], Operation>> =
+            static ref OPERATION_MAPPINGS: Vec<HashMap<TokenPattern, Operation>> =
                 get_operation_mappings();
         }
         for mapping in OPERATION_MAPPINGS.iter() {
@@ -50,7 +51,7 @@ impl Tokenizer {
 
     fn parse_relation(&mut self) -> Option<Relation> {
         lazy_static! {
-            static ref RELATION_MAPPINGS: Vec<HashMap<&'static [&'static str], Relation>> =
+            static ref RELATION_MAPPINGS: Vec<HashMap<TokenPattern, Relation>> =
                 get_relation_mapping();
         }
         for mapping in RELATION_MAPPINGS.iter() {
@@ -65,10 +66,25 @@ impl Tokenizer {
 
     fn parse_logical(&mut self) -> Option<Logical> {
         lazy_static! {
-            static ref LOGICAL_MAPPINGS: Vec<HashMap<&'static [&'static str], Logical>> =
+            static ref LOGICAL_MAPPINGS: Vec<HashMap<TokenPattern, Logical>> =
                 get_logical_mappings();
         }
         for mapping in LOGICAL_MAPPINGS.iter() {
+            for key in mapping.keys() {
+                if self.ctm.check_any_str_sequence(*key) {
+                    return Some(mapping[key].clone());
+                }
+            }
+        }
+        None
+    }
+
+    fn parse_grouping(&mut self) -> Option<Grouping> {
+        lazy_static! {
+            static ref GROUPING_MAPPINGS: Vec<HashMap<TokenPattern, Grouping>> =
+                get_grouping_mappings();
+        }
+        for mapping in GROUPING_MAPPINGS.iter() {
             for key in mapping.keys() {
                 if self.ctm.check_any_str_sequence(*key) {
                     return Some(mapping[key].clone());

@@ -1,12 +1,14 @@
+use crate::tokens::constants::grouping::*;
 use crate::tokens::constants::logical::*;
 use crate::tokens::constants::misc::*;
 use crate::tokens::constants::operations::*;
 use crate::tokens::constants::relations::*;
-use crate::tokens::{Logical, Misc, Operation, Relation};
+use crate::tokens::constants::TokenPattern;
+use crate::tokens::{Grouping, Logical, Misc, Operation, Relation};
 use std::cell::RefCell;
 use std::collections::HashMap;
 
-pub fn get_operation_mappings() -> Vec<HashMap<&'static [&'static str], Operation>> {
+pub fn get_operation_mappings() -> Vec<HashMap<TokenPattern, Operation>> {
     vec![
         hashmap! {
             G_STAR => Operation::Star,
@@ -43,7 +45,7 @@ pub fn get_operation_mappings() -> Vec<HashMap<&'static [&'static str], Operatio
     ]
 }
 
-pub fn get_misc_mappings() -> Vec<HashMap<&'static [&'static str], Misc>> {
+pub fn get_misc_mappings() -> Vec<HashMap<TokenPattern, Misc>> {
     vec![
         hashmap! {
             G_TRIANGLE => Misc::Triangle,
@@ -91,7 +93,7 @@ pub fn get_misc_mappings() -> Vec<HashMap<&'static [&'static str], Misc>> {
     ]
 }
 
-pub fn get_relation_mapping() -> Vec<HashMap<&'static [&'static str], Relation>> {
+pub fn get_relation_mapping() -> Vec<HashMap<TokenPattern, Relation>> {
     vec![
         hashmap! {
             G_SUBSETEQ => Relation::SubSetEq,
@@ -122,7 +124,7 @@ pub fn get_relation_mapping() -> Vec<HashMap<&'static [&'static str], Relation>>
     ]
 }
 
-pub fn get_logical_mappings() -> Vec<HashMap<&'static [&'static str], Logical>> {
+pub fn get_logical_mappings() -> Vec<HashMap<TokenPattern, Logical>> {
     vec![
         hashmap! {
             G_IFF => Logical::Iff,
@@ -139,6 +141,29 @@ pub fn get_logical_mappings() -> Vec<HashMap<&'static [&'static str], Logical>> 
             G_TOP => Logical::Top,
             G_VDASH => Logical::VDash,
             G_MODELS => Logical::Models,
+        },
+    ]
+}
+
+pub fn get_grouping_mappings() -> Vec<HashMap<TokenPattern, Grouping>> {
+    vec![
+        hashmap! {
+            G_LANGLE => Grouping::LAngle,
+            G_RANGLE => Grouping::RAngle,
+            G_RXPAR => Grouping::RXPar,
+            G_LXPAR => Grouping::LXPar,
+        },
+        hashmap! {
+            G_RPAREN => Grouping::RParen,
+            G_LPAREN => Grouping::LParen,
+            G_RBRAC => Grouping::RBrace,
+            G_LBRAC => Grouping::LBrace,
+            G_RCURL => Grouping::RCurl,
+            G_LCURL => Grouping::LCurl,
+            G_ABS => Grouping::Abs,
+            G_FLOOR => Grouping::Floor,
+            G_CEIL => Grouping::Ceil,
+            G_NORM => Grouping::Norm,
         },
     ]
 }
