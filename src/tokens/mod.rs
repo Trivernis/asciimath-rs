@@ -17,6 +17,8 @@ pub enum Token {
 
 #[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub enum Text {
+    Number(String),
+    Symbol(String),
     Plain(String),
     Whitespace,
 }
@@ -89,7 +91,6 @@ pub enum Misc {
     Rational,
     Real,
     Integer,
-    AsciiText,
     LatexText,
 }
 

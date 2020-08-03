@@ -94,7 +94,6 @@ pub fn get_misc_mappings() -> Vec<HashMap<TokenPattern, Misc>> {
             G_RATIONAL => Misc::Rational,
             G_REAL => Misc::Real,
             G_INTEGER => Misc::Integer,
-            G_A_TEXT => Misc::AsciiText,
             G_T_TEX => Misc::LatexText,
         },
     ]

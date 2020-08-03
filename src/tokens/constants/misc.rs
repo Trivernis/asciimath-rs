@@ -37,5 +37,9 @@ pub const G_RATIONAL: &'static [&str] = &["QQ"];
 pub const G_REAL: &'static [&str] = &["RR"];
 pub const G_INTEGER: &'static [&str] = &["ZZ"];
 
-pub const G_A_TEXT: &'static [&str] = &["\""];
+pub const A_TEXT: char = '"';
 pub const G_T_TEX: &'static [&str] = &["text"];
+pub const A_NUMCOMMA: char = '.';
+pub const A_SCIEXP: char = 'e';
+
+pub const G_NUMALLOWED: &'static [char] = &[A_NUMCOMMA, A_SCIEXP];

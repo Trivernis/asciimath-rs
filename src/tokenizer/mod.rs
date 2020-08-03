@@ -1,3 +1,4 @@
+use crate::tokens::constants::misc::{A_TEXT, G_NUMALLOWED};
 use crate::tokens::constants::TokenPattern;
 use crate::tokens::mappings::{
     get_accent_mappings, get_arrow_mapping, get_font_mappings, get_greek_mappings,
@@ -25,7 +26,6 @@ impl Tokenizer {
 
     pub fn parse(&mut self) -> Vec<Token> {
         let mut tokens = Vec::<Token>::new();
-        let mut tmp_string = String::new();
         self.ctm.seek_whitespace();
 
         while !self.ctm.check_eof() {
@@ -49,21 +49,16 @@ impl Tokenizer {
                 tokens.push(Token::Font(font))
             } else if let Some(whitespace) = self.parse_whitespace() {
                 tokens.push(Token::Text(whitespace))
+            } else if let Some(text) = self.parse_text() {
+                tokens.push(Token::Text(text))
+            } else if let Some(number) = self.parse_number() {
+                tokens.push(Token::Text(number))
             } else {
-                tmp_string.push(self.ctm.get_current());
-                let _ = self.ctm.seek_one();
-                continue;
-            }
-            if !tmp_string.is_empty() {
-                let last = tokens.pop().unwrap();
-                tokens.push(Token::Text(Text::Plain(tmp_string.clone())));
-                tmp_string.clear();
-                tokens.push(last);
+                tokens.push(Token::Text(Text::Symbol(
+                    self.ctm.get_current().to_string(),
+                )))
             }
             let _ = self.ctm.seek_one();
-        }
-        if !tmp_string.is_empty() {
-            tokens.push(Token::Text(Text::Plain(tmp_string)));
         }
         // stripping the whitespace at the end
         if let Some(Token::Text(Text::Whitespace)) = tokens.last() {
@@ -208,6 +203,40 @@ impl Tokenizer {
             self.ctm.seek_whitespace();
             self.ctm.rewind(self.ctm.get_index() - 1);
             Some(Text::Whitespace)
+        } else {
+            None
+        }
+    }
+
+    fn parse_text(&mut self) -> Option<Text> {
+        if self.ctm.check_char(&A_TEXT) {
+            let mut string = String::new();
+
+            while let Some(ch) = self.ctm.next_char() {
+                if ch == A_TEXT {
+                    break;
+                }
+                string.push(ch);
+            }
+            Some(Text::Plain(string))
+        } else {
+            None
+        }
+    }
+
+    fn parse_number(&mut self) -> Option<Text> {
+        if self.ctm.get_current().is_numeric() {
+            let mut string = self.ctm.get_current().to_string();
+
+            while let Some(ch) = self.ctm.next_char() {
+                if ch.is_numeric() || self.ctm.check_any(&G_NUMALLOWED) {
+                    string.push(ch);
+                } else {
+                    break;
+                }
+            }
+            self.ctm.rewind(self.ctm.get_index() - 1);
+            Some(Text::Number(string))
         } else {
             None
         }
