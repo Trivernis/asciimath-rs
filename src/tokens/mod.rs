@@ -1,5 +1,17 @@
 pub mod constants;
 
+pub enum Token {
+    Operation(Operation),
+    Misc(Misc),
+    Relation(Relation),
+    Logical(Logical),
+    Grouping(Grouping),
+    Arrow(Arrow),
+    Accent(Accent),
+    Greek(Greek),
+    Font(FontCommand),
+}
+
 pub enum Operation {
     Plus,
     Minus,
@@ -120,7 +132,7 @@ pub enum Grouping {
     Norm,
 }
 
-pub enum Arrows {
+pub enum Arrow {
     UpArrow,
     DownArrow,
     RightArrow,
@@ -136,7 +148,7 @@ pub enum Arrows {
     BigLeftRightArrow,
 }
 
-pub enum Accents {
+pub enum Accent {
     Hat,
     Overline,
     Underline,
