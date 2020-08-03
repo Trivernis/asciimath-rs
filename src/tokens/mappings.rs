@@ -1,5 +1,6 @@
 use crate::tokens::constants::accents::*;
 use crate::tokens::constants::arrows::*;
+use crate::tokens::constants::greek::*;
 use crate::tokens::constants::grouping::*;
 use crate::tokens::constants::logical::*;
 use crate::tokens::constants::misc::*;
@@ -7,7 +8,7 @@ use crate::tokens::constants::operations::*;
 use crate::tokens::constants::relations::*;
 
 use crate::tokens::constants::TokenPattern;
-use crate::tokens::{Accent, Arrow, Grouping, Logical, Misc, Operation, Relation};
+use crate::tokens::{Accent, Arrow, Greek, Grouping, Logical, Misc, Operation, Relation};
 use std::cell::RefCell;
 use std::collections::HashMap;
 
@@ -193,7 +194,7 @@ pub fn get_arrow_mapping() -> Vec<HashMap<TokenPattern, Arrow>> {
     ]
 }
 
-pub fn get_accent_mapping() -> Vec<HashMap<TokenPattern, Accent>> {
+pub fn get_accent_mappings() -> Vec<HashMap<TokenPattern, Accent>> {
     vec![hashmap! {
         G_HAT => Accent::Hat,
         G_UNDERLINE => Accent::Underline,
@@ -207,5 +208,46 @@ pub fn get_accent_mapping() -> Vec<HashMap<TokenPattern, Accent>> {
         G_OVERBRACE => Accent::OverBrace,
         G_COLOR => Accent::Color,
         G_CANCEL => Accent::Cancel,
+    }]
+}
+
+pub fn get_greek_mappings() -> Vec<HashMap<TokenPattern, Greek>> {
+    vec![hashmap! {
+        G_ALPHA => Greek::Alpha,
+        G_BETA => Greek::Beta,
+        G_GAMMA => Greek::Gamma,
+        G_BIGGAMMA => Greek::BigGamma,
+        G_DELTA => Greek::Delta,
+        G_BIGDELTA => Greek::BigDelta,
+        G_EPSILON => Greek::Epsilon,
+        G_VAREPSILON => Greek::VarEpsilon,
+        G_ZETA => Greek::Zeta,
+        G_ETA => Greek::Eta,
+        G_THETA => Greek::Theta,
+        G_BIGTHETA => Greek::BigTheta,
+        G_VARTHETA => Greek::VarTheta,
+        G_IOTA => Greek::Iota,
+        G_KAPPA => Greek::Kappa,
+        G_LAMBDA => Greek::Lambda,
+        G_BIGLAMBDA => Greek::BigLambda,
+        G_MU => Greek::Mu,
+        G_NU => Greek::Nu,
+        G_XI => Greek::Xi,
+        G_BIGXI => Greek::BigXi,
+        G_PI => Greek::Pi,
+        G_BIGPI => Greek::BigPi,
+        G_RHO => Greek::Rho,
+        G_SIGMA => Greek::Sigma,
+        G_BIGSIGMA => Greek::BigSigma,
+        G_TAU => Greek::Tau,
+        G_UPSILON => Greek::Upsilon,
+        G_PHI => Greek::Phi,
+        G_BIGPHI => Greek::BigPhi,
+        G_VARPHI => Greek::VarPhi,
+        G_CHI => Greek::Chi,
+        G_PSI => Greek::Psi,
+        G_BIGPSI => Greek::BigPsi,
+        G_OMEGA => Greek::Omega,
+        G_BIGOMEGA => Greek::BigOmega,
     }]
 }

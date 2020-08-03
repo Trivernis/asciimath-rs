@@ -211,7 +211,9 @@ pub enum Greek {
     VarPhi,
     Chi,
     Psi,
+    BigPsi,
     Omega,
+    BigOmega,
 }
 
 #[derive(Debug, Clone)]

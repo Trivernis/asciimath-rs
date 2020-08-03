@@ -1,9 +1,9 @@
 use crate::tokens::constants::TokenPattern;
 use crate::tokens::mappings::{
-    get_accent_mapping, get_arrow_mapping, get_grouping_mappings, get_logical_mappings,
-    get_misc_mappings, get_operation_mappings, get_relation_mapping,
+    get_accent_mappings, get_arrow_mapping, get_greek_mappings, get_grouping_mappings,
+    get_logical_mappings, get_misc_mappings, get_operation_mappings, get_relation_mapping,
 };
-use crate::tokens::{Accent, Arrow, Grouping, Logical, Misc, Operation, Relation, Token};
+use crate::tokens::{Accent, Arrow, Greek, Grouping, Logical, Misc, Operation, Relation, Token};
 use charred::tapemachine::CharTapeMachine;
 use std::collections::HashMap;
 use std::fmt::Debug;
@@ -111,9 +111,23 @@ impl Tokenizer {
 
     fn parse_accent(&mut self) -> Option<Accent> {
         lazy_static! {
-            static ref ACCENT_MAPPING: Vec<HashMap<TokenPattern, Accent>> = get_accent_mapping();
+            static ref ACCENT_MAPPINGS: Vec<HashMap<TokenPattern, Accent>> = get_accent_mappings();
         }
-        for mapping in ACCENT_MAPPING.iter() {
+        for mapping in ACCENT_MAPPINGS.iter() {
+            for key in mapping.keys() {
+                if self.ctm.check_any_str_sequence(*key) {
+                    return Some(mapping[key].clone());
+                }
+            }
+        }
+        None
+    }
+
+    fn parse_greek(&mut self) -> Option<Greek> {
+        lazy_static! {
+            static ref GREEK_MAPPINGS: Vec<HashMap<TokenPattern, Greek>> = get_greek_mappings();
+        }
+        for mapping in GREEK_MAPPINGS.iter() {
             for key in mapping.keys() {
                 if self.ctm.check_any_str_sequence(*key) {
                     return Some(mapping[key].clone());
