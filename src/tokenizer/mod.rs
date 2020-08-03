@@ -1,5 +1,5 @@
-use crate::tokens::mappings::{get_misc_mappings, get_operation_mappings};
-use crate::tokens::{Misc, Operation, Token};
+use crate::tokens::mappings::{get_misc_mappings, get_operation_mappings, get_relation_mapping};
+use crate::tokens::{Misc, Operation, Relation, Token};
 use charred::tapemachine::CharTapeMachine;
 use std::collections::HashMap;
 
@@ -37,6 +37,21 @@ impl Tokenizer {
                 get_operation_mappings();
         }
         for mapping in OPERATION_MAPPINGS.iter() {
+            for key in mapping.keys() {
+                if self.ctm.check_any_str_sequence(*key) {
+                    return Some(mapping[key].clone());
+                }
+            }
+        }
+        None
+    }
+
+    fn parse_relation(&mut self) -> Option<Relation> {
+        lazy_static! {
+            static ref RELATION_MAPPINGS: Vec<HashMap<&'static [&'static str], Relation>> =
+                get_relation_mapping();
+        }
+        for mapping in RELATION_MAPPINGS.iter() {
             for key in mapping.keys() {
                 if self.ctm.check_any_str_sequence(*key) {
                     return Some(mapping[key].clone());

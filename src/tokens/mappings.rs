@@ -1,6 +1,7 @@
 use crate::tokens::constants::misc::*;
 use crate::tokens::constants::operations::*;
-use crate::tokens::{Misc, Operation};
+use crate::tokens::constants::relations::*;
+use crate::tokens::{Misc, Operation, Relation};
 use std::cell::RefCell;
 use std::collections::HashMap;
 
@@ -85,6 +86,37 @@ pub fn get_misc_mappings() -> Vec<HashMap<&'static [&'static str], Misc>> {
             G_INTEGER => Misc::Integer,
             G_A_TEXT => Misc::AsciiText,
             G_T_TEX => Misc::LatexText,
+        },
+    ]
+}
+
+pub fn get_relation_mapping() -> Vec<HashMap<&'static [&'static str], Relation>> {
+    vec![
+        hashmap! {
+            G_SUBSETEQ => Relation::SubSetEq,
+            G_SUPSETEQ => Relation::SupSetEq,
+            G_LE => Relation::Le,
+            G_GE => Relation::Ge,
+            G_SUCCEQ => Relation::SuccEq,
+            G_PRECEQ => Relation::PrecEq,
+        },
+        hashmap! {
+            G_SUCC => Relation::Succ,
+        },
+        hashmap! {
+            G_EQ => Relation::Eq,
+            G_NE => Relation::Ne,
+            G_LT => Relation::Lt,
+            G_GT => Relation::Gt,
+            G_PREC => Relation::Prec,
+            G_IN => Relation::In,
+            G_NOTIN => Relation::NotIn,
+            G_SUBSET => Relation::SubSet,
+            G_SUPSET => Relation::SupSet,
+            G_EQUIV => Relation::Equiv,
+            G_CONG => Relation::Cong,
+            G_APPROX => Relation::Approx,
+            G_PROP => Relation::PropTo,
         },
     ]
 }
