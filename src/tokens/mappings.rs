@@ -12,7 +12,6 @@ use crate::tokens::constants::TokenPattern;
 use crate::tokens::{
     Accent, Arrow, FontCommand, Greek, Grouping, Logical, Misc, Operation, Relation,
 };
-use std::cell::RefCell;
 use std::collections::HashMap;
 
 pub fn get_operation_mappings() -> Vec<HashMap<TokenPattern, Operation>> {
@@ -64,6 +63,7 @@ pub fn get_misc_mappings() -> Vec<HashMap<TokenPattern, Misc>> {
             G_A_FRAC => Misc::AsciiFrac,
             G_T_FRAC => Misc::LatexFrac,
             G_POW => Misc::Pow,
+            G_SUB => Misc::Sub,
             G_SQRT => Misc::Sqrt,
             G_ROOT => Misc::Root,
             G_INT => Misc::Int,

@@ -1,7 +1,7 @@
 pub mod constants;
 pub mod mappings;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub enum Token {
     Operation(Operation),
     Misc(Misc),
@@ -12,9 +12,16 @@ pub enum Token {
     Accent(Accent),
     Greek(Greek),
     Font(FontCommand),
+    Text(Text),
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialOrd, PartialEq)]
+pub enum Text {
+    Plain(String),
+    Whitespace,
+}
+
+#[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub enum Operation {
     Plus,
     Minus,
@@ -44,10 +51,11 @@ pub enum Operation {
     BigCup,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub enum Misc {
     AsciiFrac,
     LatexFrac,
+    Sub,
     Pow,
     Sqrt,
     Root,
@@ -85,7 +93,7 @@ pub enum Misc {
     LatexText,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub enum Relation {
     Eq,
     Ne,
@@ -109,7 +117,7 @@ pub enum Relation {
     PropTo,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub enum Logical {
     And,
     Or,
@@ -125,7 +133,7 @@ pub enum Logical {
     Models,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub enum Grouping {
     RParen,
     LParen,
@@ -143,7 +151,7 @@ pub enum Grouping {
     Norm,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub enum Arrow {
     UpArrow,
     DownArrow,
@@ -160,7 +168,7 @@ pub enum Arrow {
     BigLeftRightArrow,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub enum Accent {
     Hat,
     Overline,
@@ -176,7 +184,7 @@ pub enum Accent {
     Cancel,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub enum Greek {
     Alpha,
     Beta,
@@ -216,7 +224,7 @@ pub enum Greek {
     BigOmega,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub enum FontCommand {
     Big,
     BigOutline,

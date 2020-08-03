@@ -1,6 +1,7 @@
 pub const G_A_FRAC: &'static [&str] = &["/"];
 pub const G_T_FRAC: &'static [&str] = &["frac"];
 
+pub const G_SUB: &'static [&str] = &["_"];
 pub const G_POW: &'static [&str] = &["^"];
 pub const G_SQRT: &'static [&str] = &["sqrt"];
 pub const G_ROOT: &'static [&str] = &["root"];

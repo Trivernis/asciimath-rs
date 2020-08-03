@@ -5,23 +5,72 @@ use crate::tokens::mappings::{
     get_relation_mapping,
 };
 use crate::tokens::{
-    Accent, Arrow, FontCommand, Greek, Grouping, Logical, Misc, Operation, Relation, Token,
+    Accent, Arrow, FontCommand, Greek, Grouping, Logical, Misc, Operation, Relation, Text, Token,
 };
 use charred::tapemachine::CharTapeMachine;
 use std::collections::HashMap;
-use std::fmt::Debug;
 
 pub struct Tokenizer {
     ctm: CharTapeMachine,
-    tokens: Vec<Token>,
 }
 
 impl Tokenizer {
     pub fn new(text: String) -> Self {
+        let mut chars = text.chars().collect::<Vec<char>>();
+        chars.push('\n');
         Self {
-            ctm: CharTapeMachine::new(text.chars().collect()),
-            tokens: Vec::new(),
+            ctm: CharTapeMachine::new(chars),
         }
+    }
+
+    pub fn parse(&mut self) -> Vec<Token> {
+        let mut tokens = Vec::<Token>::new();
+        let mut tmp_string = String::new();
+        self.ctm.seek_whitespace();
+
+        while !self.ctm.check_eof() {
+            if let Some(grouping) = self.parse_grouping() {
+                tokens.push(Token::Grouping(grouping))
+            } else if let Some(arrow) = self.parse_arrows() {
+                tokens.push(Token::Arrow(arrow))
+            } else if let Some(relation) = self.parse_relation() {
+                tokens.push(Token::Relation(relation))
+            } else if let Some(operation) = self.parse_operation() {
+                tokens.push(Token::Operation(operation))
+            } else if let Some(misc) = self.parse_misc() {
+                tokens.push(Token::Misc(misc))
+            } else if let Some(logical) = self.parse_logical() {
+                tokens.push(Token::Logical(logical))
+            } else if let Some(accent) = self.parse_accent() {
+                tokens.push(Token::Accent(accent))
+            } else if let Some(greek) = self.parse_greek() {
+                tokens.push(Token::Greek(greek))
+            } else if let Some(font) = self.parse_font_command() {
+                tokens.push(Token::Font(font))
+            } else if let Some(whitespace) = self.parse_whitespace() {
+                tokens.push(Token::Text(whitespace))
+            } else {
+                tmp_string.push(self.ctm.get_current());
+                let _ = self.ctm.seek_one();
+                continue;
+            }
+            if !tmp_string.is_empty() {
+                let last = tokens.pop().unwrap();
+                tokens.push(Token::Text(Text::Plain(tmp_string.clone())));
+                tmp_string.clear();
+                tokens.push(last);
+            }
+            let _ = self.ctm.seek_one();
+        }
+        if !tmp_string.is_empty() {
+            tokens.push(Token::Text(Text::Plain(tmp_string)));
+        }
+        // stripping the whitespace at the end
+        if let Some(Token::Text(Text::Whitespace)) = tokens.last() {
+            tokens.pop().unwrap();
+        }
+
+        tokens
     }
 
     fn parse_misc(&mut self) -> Option<Misc> {
@@ -152,5 +201,15 @@ impl Tokenizer {
             }
         }
         None
+    }
+
+    fn parse_whitespace(&mut self) -> Option<Text> {
+        if self.ctm.get_current().is_whitespace() {
+            self.ctm.seek_whitespace();
+            self.ctm.rewind(self.ctm.get_index() - 1);
+            Some(Text::Whitespace)
+        } else {
+            None
+        }
     }
 }
