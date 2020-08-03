@@ -116,6 +116,7 @@ pub enum Logical {
     Not,
     Implies,
     If,
+    Iff,
     ForAll,
     Exists,
     Bot,

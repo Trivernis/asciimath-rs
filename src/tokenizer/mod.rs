@@ -1,5 +1,7 @@
-use crate::tokens::mappings::{get_misc_mappings, get_operation_mappings, get_relation_mapping};
-use crate::tokens::{Misc, Operation, Relation, Token};
+use crate::tokens::mappings::{
+    get_logical_mappings, get_misc_mappings, get_operation_mappings, get_relation_mapping,
+};
+use crate::tokens::{Logical, Misc, Operation, Relation, Token};
 use charred::tapemachine::CharTapeMachine;
 use std::collections::HashMap;
 
@@ -52,6 +54,21 @@ impl Tokenizer {
                 get_relation_mapping();
         }
         for mapping in RELATION_MAPPINGS.iter() {
+            for key in mapping.keys() {
+                if self.ctm.check_any_str_sequence(*key) {
+                    return Some(mapping[key].clone());
+                }
+            }
+        }
+        None
+    }
+
+    fn parse_logical(&mut self) -> Option<Logical> {
+        lazy_static! {
+            static ref LOGICAL_MAPPINGS: Vec<HashMap<&'static [&'static str], Logical>> =
+                get_logical_mappings();
+        }
+        for mapping in LOGICAL_MAPPINGS.iter() {
             for key in mapping.keys() {
                 if self.ctm.check_any_str_sequence(*key) {
                     return Some(mapping[key].clone());

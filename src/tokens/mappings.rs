@@ -1,7 +1,8 @@
+use crate::tokens::constants::logical::*;
 use crate::tokens::constants::misc::*;
 use crate::tokens::constants::operations::*;
 use crate::tokens::constants::relations::*;
-use crate::tokens::{Misc, Operation, Relation};
+use crate::tokens::{Logical, Misc, Operation, Relation};
 use std::cell::RefCell;
 use std::collections::HashMap;
 
@@ -117,6 +118,27 @@ pub fn get_relation_mapping() -> Vec<HashMap<&'static [&'static str], Relation>>
             G_CONG => Relation::Cong,
             G_APPROX => Relation::Approx,
             G_PROP => Relation::PropTo,
+        },
+    ]
+}
+
+pub fn get_logical_mappings() -> Vec<HashMap<&'static [&'static str], Logical>> {
+    vec![
+        hashmap! {
+            G_IFF => Logical::Iff,
+        },
+        hashmap! {
+            G_AND => Logical::And,
+            G_OR => Logical::Or,
+            G_NOT => Logical::Not,
+            G_IMPLIES => Logical::Implies,
+            G_IF => Logical::If,
+            G_FORALL => Logical::ForAll,
+            G_EXISTS => Logical::Exists,
+            G_BOT => Logical::Bot,
+            G_TOP => Logical::Top,
+            G_VDASH => Logical::VDash,
+            G_MODELS => Logical::Models,
         },
     ]
 }
