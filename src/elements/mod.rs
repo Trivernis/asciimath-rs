@@ -1,20 +1,17 @@
 use crate::elements::group::Group;
 use crate::elements::literal::Literal;
 use crate::elements::special::Special;
+use crate::utils::Boxed;
 
 pub mod group;
 pub mod literal;
 pub mod special;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub enum Element {
     Literal(Literal),
     Special(Special),
     Group(Group),
 }
 
-impl Element {
-    pub fn boxed(self) -> Box<Self> {
-        Box::new(self)
-    }
-}
+impl Boxed for Element {}

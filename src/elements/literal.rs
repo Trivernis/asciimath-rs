@@ -1,11 +1,11 @@
 use crate::tokens::{Arrow, FontCommand, Function, Greek, Logical, Misc, Operation, Relation};
 
-#[derive(Clone, Debug)]
+#[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub enum Literal {
     Integer,
-    Text(TextNode),
-    Symbol(SymbolNode),
-    Number(NumberNode),
+    Text(PlainText),
+    Symbol(Symbol),
+    Number(Number),
     Greek(Greek),
     FontCommand(FontCommand),
     Relation(Relation),
@@ -16,17 +16,17 @@ pub enum Literal {
     Operation(Operation),
 }
 
-#[derive(Clone, Debug)]
-pub struct TextNode {
+#[derive(Debug, Clone, PartialOrd, PartialEq)]
+pub struct PlainText {
     pub(crate) text: String,
 }
 
-#[derive(Clone, Debug)]
-pub struct SymbolNode {
+#[derive(Debug, Clone, PartialOrd, PartialEq)]
+pub struct Symbol {
     pub(crate) symbol: String,
 }
 
-#[derive(Clone, Debug)]
-pub struct NumberNode {
+#[derive(Debug, Clone, PartialOrd, PartialEq)]
+pub struct Number {
     pub(crate) number: String,
 }

@@ -1,6 +1,6 @@
 use crate::elements::special::Expression;
 
-#[derive(Clone, Debug)]
+#[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub enum Group {
     Parentheses(Parentheses),
     Brackets(Brackets),
@@ -13,47 +13,47 @@ pub enum Group {
     Norm(Norm),
 }
 
-#[derive(Clone, Debug)]
+#[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub struct Parentheses {
-    inner: Box<Expression>,
+    pub inner: Box<Expression>,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub struct Brackets {
-    inner: Box<Expression>,
+    pub inner: Box<Expression>,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub struct Braces {
-    inner: Box<Expression>,
+    pub inner: Box<Expression>,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub struct Angles {
-    inner: Box<Expression>,
+    pub inner: Box<Expression>,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub struct XGroup {
-    inner: Box<Expression>,
+    pub inner: Box<Expression>,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub struct Abs {
-    inner: Box<Expression>,
+    pub inner: Box<Expression>,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub struct Floor {
-    inner: Box<Expression>,
+    pub inner: Box<Expression>,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub struct Ceil {
-    inner: Box<Expression>,
+    pub inner: Box<Expression>,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub struct Norm {
-    inner: Box<Expression>,
+    pub inner: Box<Expression>,
 }

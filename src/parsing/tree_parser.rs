@@ -1,18 +1,27 @@
-use crate::elements::literal::{Literal, NumberNode, SymbolNode, TextNode};
+use crate::elements::group::{
+    Abs, Angles, Braces, Brackets, Ceil, Floor, Group, Norm, Parentheses, XGroup,
+};
+use crate::elements::literal::{Literal, Number, PlainText, Symbol};
 use crate::elements::special::{
-    Expression, Frac, Integral, OIntegral, Pow, Prod, Root, Special, Sqrt, Sum,
+    Expression, Frac, Integral, OIntegral, Pow, Prod, Root, Special, Sqrt, Sub, Sum,
 };
 use crate::elements::Element;
-use crate::tokens::{Misc, Operation, Text, Token};
+use crate::tokens::{Grouping, Misc, Operation, Text, Token};
+use crate::utils::Boxed;
 
 pub struct TreeParser {
     tokens: Vec<Token>,
     index: usize,
+    group_return: bool,
 }
 
 impl TreeParser {
     pub fn new(tokens: Vec<Token>) -> Self {
-        Self { tokens, index: 0 }
+        Self {
+            tokens,
+            index: 0,
+            group_return: false,
+        }
     }
 
     pub fn parse(&mut self) -> Expression {
@@ -32,6 +41,8 @@ impl TreeParser {
                 }
             })
             .collect();
+        // add null end token to ensure that everything got parsed
+        self.tokens.push(Token::End)
     }
 
     fn step(&mut self) -> bool {
@@ -63,8 +74,12 @@ impl TreeParser {
             if let Some(element) = self.parse_element() {
                 expression.add_child(element);
             }
+            if self.group_return {
+                break;
+            }
             self.step();
         }
+        self.group_return = false;
 
         expression
     }
@@ -85,15 +100,22 @@ impl TreeParser {
             }
             Token::Operation(op) => Some(self.parse_operation(op)),
             Token::Misc(m) => Some(self.parse_misc(m)),
+            Token::Grouping(g) => {
+                if let Some(group) = self.parse_group(g) {
+                    Some(Element::Group(group))
+                } else {
+                    None
+                }
+            }
             _ => None,
         }
     }
 
     fn parse_text(&self, token: Text) -> Option<Literal> {
         match token {
-            Text::Symbol(s) => Some(Literal::Symbol(SymbolNode { symbol: s })),
-            Text::Number(n) => Some(Literal::Number(NumberNode { number: n })),
-            Text::Plain(p) => Some(Literal::Text(TextNode { text: p })),
+            Text::Symbol(s) => Some(Literal::Symbol(Symbol { symbol: s })),
+            Text::Number(n) => Some(Literal::Number(Number { number: n })),
+            Text::Plain(p) => Some(Literal::Text(PlainText { text: p })),
             _ => None,
         }
     }
@@ -126,6 +148,12 @@ impl TreeParser {
                     exp: self.parse_element().unwrap().boxed(),
                 }))
             }
+            Misc::Sub => {
+                self.step();
+                Element::Special(Special::Sub(Sub {
+                    lower: self.parse_element().unwrap().boxed(),
+                }))
+            }
             Misc::LatexFrac => {
                 self.step();
                 Element::Special(Special::Frac(Frac {
@@ -155,6 +183,68 @@ impl TreeParser {
                 top: self.parse_pow(),
             })),
             _ => Element::Literal(Literal::Misc(token)),
+        }
+    }
+
+    fn parse_group(&mut self, token: Grouping) -> Option<Group> {
+        match token {
+            Grouping::RParen => {
+                self.step();
+                let inner = self.parse_expression().boxed();
+                Some(Group::Parentheses(Parentheses { inner }))
+            }
+            Grouping::RBrace => {
+                self.step();
+                let inner = self.parse_expression().boxed();
+
+                Some(Group::Braces(Braces { inner }))
+            }
+            Grouping::RBracket => {
+                self.step();
+                let inner = self.parse_expression().boxed();
+
+                Some(Group::Brackets(Brackets { inner }))
+            }
+            Grouping::RAngle => {
+                self.step();
+                let inner = self.parse_expression().boxed();
+
+                Some(Group::Angles(Angles { inner }))
+            }
+            Grouping::RXPar => {
+                self.step();
+                let inner = self.parse_expression().boxed();
+
+                Some(Group::XGroup(XGroup { inner }))
+            }
+            Grouping::Abs => {
+                self.step();
+                self.step();
+                let inner = self.parse_expression().boxed();
+                Some(Group::Abs(Abs { inner }))
+            }
+            Grouping::Floor => {
+                self.step();
+                self.step();
+                let inner = self.parse_expression().boxed();
+                Some(Group::Floor(Floor { inner }))
+            }
+            Grouping::Ceil => {
+                self.step();
+                self.step();
+                let inner = self.parse_expression().boxed();
+                Some(Group::Ceil(Ceil { inner }))
+            }
+            Grouping::Norm => {
+                self.step();
+                self.step();
+                let inner = self.parse_expression().boxed();
+                Some(Group::Norm(Norm { inner }))
+            }
+            _ => {
+                self.group_return = true;
+                None
+            }
         }
     }
 

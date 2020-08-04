@@ -10,12 +10,18 @@ extern crate lazy_static;
 pub mod elements;
 pub mod parsing;
 mod tokens;
+mod utils;
 
 #[cfg(test)]
 mod tests {
+    use crate::elements::literal::{Literal, Number};
+    use crate::elements::special::{Expression, Special, Sum};
+    use crate::elements::Element;
     use crate::parsing::tokenizer::Tokenizer;
     use crate::parsing::tree_parser::TreeParser;
+    use crate::tokens::Function::Exp;
     use crate::tokens::{Function, Grouping, Misc, Operation, Relation, Text, Token};
+    use crate::utils::Boxed;
     use std::fs;
     use test::Bencher;
 
@@ -114,16 +120,41 @@ mod tests {
         )
     }
 
-    //#[test]
-    fn it_parses_into_a_tree() {
-        let expression = "sum_2^3 + 4^4";
+    #[test]
+    fn it_parses_into_a_tree1() {
+        let expression = "sum_2^3";
         let mut tokenizer = Tokenizer::new(expression.to_string());
+        let tokens = tokenizer.parse();
+        let mut tree_parser = TreeParser::new(tokens.clone());
+        let expression = tree_parser.parse();
+        let mut test_expression = Expression::new();
+        test_expression.add_child(Element::Special(Special::Sum(Sum {
+            bottom: Some(
+                Element::Literal(Literal::Number(Number {
+                    number: "2".to_string(),
+                }))
+                .boxed(),
+            ),
+            top: Some(
+                Element::Literal(Literal::Number(Number {
+                    number: "3".to_string(),
+                }))
+                .boxed(),
+            ),
+        })));
+        assert_eq!(expression, test_expression)
+    }
+
+    #[test]
+    fn it_parses_into_a_tree2() {
+        let str_expression = "sum_2^3 + abs(4^4) - 1^(2*2)_2";
+        let mut tokenizer = Tokenizer::new(str_expression.to_string());
         let tokens = tokenizer.parse();
         let mut tree_parser = TreeParser::new(tokens.clone());
         let expression = tree_parser.parse();
         fs::write(
             "test-files/test.txt",
-            format!("{:?}\n\n{:?}", tokens, expression),
+            format!("{}\n\n{:?}\n\n{:#?}", str_expression, tokens, expression),
         );
     }
 

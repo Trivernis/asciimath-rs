@@ -14,6 +14,7 @@ pub enum Token {
     Font(FontCommand),
     Function(Function),
     Text(Text),
+    End,
 }
 
 #[derive(Debug, Clone, PartialOrd, PartialEq)]
@@ -139,10 +140,10 @@ pub enum Logical {
 pub enum Grouping {
     RParen,
     LParen,
+    RBracket,
+    LBracket,
     RBrace,
     LBrace,
-    RCurl,
-    LCurl,
     LAngle,
     RAngle,
     LXPar,
