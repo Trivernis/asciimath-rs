@@ -12,6 +12,7 @@ use crate::parsing::tokenizer::Tokenizer;
 use crate::parsing::tree_parser::TreeParser;
 
 pub mod elements;
+pub mod format;
 pub mod parsing;
 pub mod tokens;
 pub(crate) mod utils;
