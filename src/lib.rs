@@ -8,18 +8,18 @@ extern crate maplit;
 extern crate lazy_static;
 
 pub mod elements;
-pub mod tokenizer;
+pub mod parsing;
 mod tokens;
 
 #[cfg(test)]
 mod tests {
-    use crate::tokenizer::Tokenizer;
-    use crate::tokens::{Grouping, Misc, Operation, Relation, Text, Token};
+    use crate::parsing::tokenizer::Tokenizer;
+    use crate::tokens::{Function, Grouping, Misc, Operation, Relation, Text, Token};
     use test::Bencher;
 
     #[test]
     fn it_tokenizes_expressions1() {
-        let expression = "sum_(i=1)^n";
+        let expression = "sum_(i=1)^n*sin(x)";
         let mut tokenizer = Tokenizer::new(expression.to_string());
         let tokens = tokenizer.parse();
         assert_eq!(
@@ -33,7 +33,12 @@ mod tests {
                 Token::Text(Text::Number("1".to_string())),
                 Token::Grouping(Grouping::LParen),
                 Token::Misc(Misc::Pow),
-                Token::Text(Text::Symbol("n".to_string()))
+                Token::Text(Text::Symbol("n".to_string())),
+                Token::Operation(Operation::CDot),
+                Token::Function(Function::Sin),
+                Token::Grouping(Grouping::RParen),
+                Token::Text(Text::Symbol("x".to_string())),
+                Token::Grouping(Grouping::LParen),
             ]
         );
     }

@@ -12,6 +12,7 @@ pub enum Token {
     Accent(Accent),
     Greek(Greek),
     Font(FontCommand),
+    Function(Function),
     Text(Text),
 }
 
@@ -233,4 +234,37 @@ pub enum FontCommand {
     TText,
     Fr,
     SansSerif,
+}
+
+#[derive(Debug, Clone, PartialOrd, PartialEq)]
+pub enum Function {
+    Sin,
+    Cos,
+    Tan,
+    Sec,
+    Csc,
+    Cot,
+    ArcSin,
+    ArcCos,
+    ArcTan,
+    Sinh,
+    Cosh,
+    Tanh,
+    Sech,
+    Csch,
+    Coth,
+    Exp,
+    Log,
+    Ln,
+    Det,
+    Dim,
+    Mod,
+    Gcd,
+    Lcm,
+    Lub,
+    Glb,
+    Min,
+    Max,
+    F,
+    G,
 }

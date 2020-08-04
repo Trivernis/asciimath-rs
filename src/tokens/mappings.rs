@@ -1,6 +1,7 @@
 use crate::tokens::constants::accents::*;
 use crate::tokens::constants::arrows::*;
 use crate::tokens::constants::font_commands::*;
+use crate::tokens::constants::functions::*;
 use crate::tokens::constants::greek::*;
 use crate::tokens::constants::grouping::*;
 use crate::tokens::constants::logical::*;
@@ -10,7 +11,7 @@ use crate::tokens::constants::relations::*;
 
 use crate::tokens::constants::TokenPattern;
 use crate::tokens::{
-    Accent, Arrow, FontCommand, Greek, Grouping, Logical, Misc, Operation, Relation,
+    Accent, Arrow, FontCommand, Function, Greek, Grouping, Logical, Misc, Operation, Relation,
 };
 use std::collections::HashMap;
 
@@ -265,6 +266,46 @@ pub fn get_font_mappings() -> Vec<HashMap<&'static str, FontCommand>> {
             F_TT => FontCommand::TText,
             F_FR => FontCommand::Fr,
             F_SF => FontCommand::SansSerif,
+        },
+    ]
+}
+
+pub fn get_function_mappings() -> Vec<HashMap<&'static str, Function>> {
+    vec![
+        hashmap! {
+            F_SINH => Function::Sinh,
+            F_COSH => Function::Cosh,
+            F_TANH => Function::Tanh,
+            F_SECH => Function::Sech,
+            F_CSCH => Function::Csch,
+            F_COTH => Function::Coth,
+        },
+        hashmap! {
+            F_SIN => Function::Sin,
+            F_COS => Function::Cos,
+            F_TAN => Function::Tan,
+            F_SEC => Function::Sec,
+            F_CSC => Function::Csc,
+            F_COT => Function::Cot,
+            F_ARCSIN => Function::ArcSin,
+            F_ARCCOS => Function::ArcCos,
+            F_ARCTAN => Function::ArcTan,
+            F_EXP => Function::Exp,
+            F_LOG => Function::Log,
+            F_LN => Function::Ln,
+            F_DET => Function::Det,
+            F_DIM => Function::Dim,
+            F_MOD => Function::Mod,
+            F_GCD => Function::Gcd,
+            F_LCM => Function::Lcm,
+            F_LUB => Function::Lub,
+            F_GLB => Function::Glb,
+            F_MIN => Function::Min,
+            F_MAX => Function::Max,
+        },
+        hashmap! {
+            F_F => Function::F,
+            F_G => Function::G,
         },
     ]
 }

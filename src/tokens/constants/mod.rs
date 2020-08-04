@@ -1,6 +1,7 @@
 pub mod accents;
 pub mod arrows;
 pub mod font_commands;
+pub mod functions;
 pub mod greek;
 pub mod grouping;
 pub mod logical;

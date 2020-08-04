@@ -1,12 +1,13 @@
 use crate::tokens::constants::misc::{A_TEXT, G_NUMALLOWED};
 use crate::tokens::constants::TokenPattern;
 use crate::tokens::mappings::{
-    get_accent_mappings, get_arrow_mapping, get_font_mappings, get_greek_mappings,
-    get_grouping_mappings, get_logical_mappings, get_misc_mappings, get_operation_mappings,
-    get_relation_mapping,
+    get_accent_mappings, get_arrow_mapping, get_font_mappings, get_function_mappings,
+    get_greek_mappings, get_grouping_mappings, get_logical_mappings, get_misc_mappings,
+    get_operation_mappings, get_relation_mapping,
 };
 use crate::tokens::{
-    Accent, Arrow, FontCommand, Greek, Grouping, Logical, Misc, Operation, Relation, Text, Token,
+    Accent, Arrow, FontCommand, Function, Greek, Grouping, Logical, Misc, Operation, Relation,
+    Text, Token,
 };
 use charred::tapemachine::CharTapeMachine;
 use std::collections::HashMap;
@@ -47,6 +48,8 @@ impl Tokenizer {
                 tokens.push(Token::Greek(greek))
             } else if let Some(font) = self.parse_font_command() {
                 tokens.push(Token::Font(font))
+            } else if let Some(function) = self.parse_function() {
+                tokens.push(Token::Function(function))
             } else if let Some(whitespace) = self.parse_whitespace() {
                 tokens.push(Token::Text(whitespace))
             } else if let Some(text) = self.parse_text() {
@@ -189,6 +192,21 @@ impl Tokenizer {
             static ref FONTC_MAPPING: Vec<HashMap<&'static str, FontCommand>> = get_font_mappings();
         }
         for mapping in FONTC_MAPPING.iter() {
+            for key in mapping.keys() {
+                if self.ctm.check_str_sequence(*key) {
+                    return Some(mapping[key].clone());
+                }
+            }
+        }
+        None
+    }
+
+    fn parse_function(&mut self) -> Option<Function> {
+        lazy_static! {
+            static ref FUNCTION_MAPPING: Vec<HashMap<&'static str, Function>> =
+                get_function_mappings();
+        }
+        for mapping in FUNCTION_MAPPING.iter() {
             for key in mapping.keys() {
                 if self.ctm.check_str_sequence(*key) {
                     return Some(mapping[key].clone());
