@@ -1,3 +1,4 @@
+use crate::elements::accent::{Color, ExpressionAccent, GenericAccent, OverSet, UnderSet};
 use crate::elements::group::{
     Abs, Angles, Braces, Brackets, Ceil, Floor, Group, Norm, Parentheses, XGroup,
 };
@@ -6,7 +7,7 @@ use crate::elements::special::{
     Expression, Frac, Integral, OIntegral, Pow, Prod, Root, Special, Sqrt, Sub, Sum,
 };
 use crate::elements::Element;
-use crate::tokens::{FontCommand, Grouping, Misc, Operation, Text, Token};
+use crate::tokens::{Accent, FontCommand, Grouping, Misc, Operation, Text, Token};
 use crate::utils::Boxed;
 
 pub struct TreeParser {
@@ -114,7 +115,45 @@ impl TreeParser {
                     None
                 }
             }
+            Token::Accent(a) => {
+                if let Some(accent) = self.parse_accent(a) {
+                    Some(Element::Accent(accent))
+                } else {
+                    None
+                }
+            }
             _ => None,
+        }
+    }
+
+    fn parse_accent(&mut self, token: Accent) -> Option<ExpressionAccent> {
+        match token {
+            Accent::OverSet => {
+                self.step();
+                let top = self.parse_element()?.boxed();
+                self.step();
+                let bottom = self.parse_element()?.boxed();
+                Some(ExpressionAccent::OverSet(OverSet { top, bottom }))
+            }
+            Accent::UnderSet => {
+                self.step();
+                let bottom = self.parse_element()?.boxed();
+                self.step();
+                let top = self.parse_element()?.boxed();
+                Some(ExpressionAccent::UnderSet(UnderSet { top, bottom }))
+            }
+            Accent::Color(color) => {
+                self.step();
+                let inner = self.parse_element()?.boxed();
+                Some(ExpressionAccent::Color(Color { color, inner }))
+            }
+            _ => {
+                self.step();
+                Some(ExpressionAccent::Generic(GenericAccent {
+                    inner: self.parse_element()?.boxed(),
+                    accent: token,
+                }))
+            }
         }
     }
 

@@ -1,3 +1,5 @@
+use crate::tokens::constants::accents::G_COLOR;
+use crate::tokens::constants::grouping::T_LPAREN;
 use crate::tokens::constants::misc::{A_TEXT, G_NUMALLOWED};
 use crate::tokens::constants::TokenPattern;
 use crate::tokens::mappings::{
@@ -160,17 +162,25 @@ impl Tokenizer {
     }
 
     fn parse_accent(&mut self) -> Option<Accent> {
-        lazy_static! {
-            static ref ACCENT_MAPPINGS: Vec<HashMap<TokenPattern, Accent>> = get_accent_mappings();
-        }
-        for mapping in ACCENT_MAPPINGS.iter() {
-            for key in mapping.keys() {
-                if self.ctm.check_any_str_sequence(*key) {
-                    return Some(mapping[key].clone());
+        if self.ctm.check_any_str_sequence(G_COLOR) {
+            self.ctm.seek_one().unwrap();
+            Some(Accent::Color(
+                self.ctm.get_string_until_any(&[T_LPAREN], &[]).unwrap(),
+            ))
+        } else {
+            lazy_static! {
+                static ref ACCENT_MAPPINGS: Vec<HashMap<TokenPattern, Accent>> =
+                    get_accent_mappings();
+            }
+            for mapping in ACCENT_MAPPINGS.iter() {
+                for key in mapping.keys() {
+                    if self.ctm.check_any_str_sequence(*key) {
+                        return Some(mapping[key].clone());
+                    }
                 }
             }
+            None
         }
-        None
     }
 
     fn parse_greek(&mut self) -> Option<Greek> {

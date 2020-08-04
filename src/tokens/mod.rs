@@ -183,7 +183,7 @@ pub enum Accent {
     UnderSet,
     UnderBrace,
     OverBrace,
-    Color,
+    Color(String),
     Cancel,
 }
 

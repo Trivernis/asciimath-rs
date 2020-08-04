@@ -34,7 +34,6 @@ mod tests {
     use crate::parse;
     use crate::parsing::tokenizer::Tokenizer;
     use crate::parsing::tree_parser::TreeParser;
-    use crate::tokens::Function::Exp;
     use crate::tokens::{Function, Grouping, Misc, Operation, Relation, Text, Token};
     use crate::utils::Boxed;
     use std::fs;
@@ -164,7 +163,7 @@ mod tests {
     fn it_parses_into_a_tree2() {
         fs::write(
             "test-files/test.txt",
-            format!("{:#?}", parse("a * b^4 - c(c-2)".to_string())),
+            format!("{:#?}", parse("color(red)(a) * b^4 - c(c-2)".to_string())),
         );
     }
 
