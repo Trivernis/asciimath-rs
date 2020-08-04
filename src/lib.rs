@@ -7,16 +7,30 @@ extern crate maplit;
 #[macro_use]
 extern crate lazy_static;
 
+use crate::elements::special::Expression;
+use crate::parsing::tokenizer::Tokenizer;
+use crate::parsing::tree_parser::TreeParser;
+
 pub mod elements;
 pub mod parsing;
-mod tokens;
-mod utils;
+pub mod tokens;
+pub(crate) mod utils;
+
+/// Parses the contents of a string into an AsciiMath expression
+pub fn parse(content: String) -> Expression {
+    let mut tokenizer = Tokenizer::new(content);
+    let tokens = tokenizer.parse();
+    let mut tree_parser = TreeParser::new(tokens);
+
+    tree_parser.parse()
+}
 
 #[cfg(test)]
 mod tests {
     use crate::elements::literal::{Literal, Number};
     use crate::elements::special::{Expression, Special, Sum};
     use crate::elements::Element;
+    use crate::parse;
     use crate::parsing::tokenizer::Tokenizer;
     use crate::parsing::tree_parser::TreeParser;
     use crate::tokens::Function::Exp;
@@ -145,25 +159,17 @@ mod tests {
         assert_eq!(expression, test_expression)
     }
 
-    #[test]
+    //#[test]
     fn it_parses_into_a_tree2() {
-        let str_expression = "bb\"test\" bb";
-        let mut tokenizer = Tokenizer::new(str_expression.to_string());
-        let tokens = tokenizer.parse();
-        let mut tree_parser = TreeParser::new(tokens.clone());
-        let expression = tree_parser.parse();
         fs::write(
             "test-files/test.txt",
-            format!("{}\n\n{:?}\n\n{:#?}", str_expression, tokens, expression),
+            format!("{:#?}", parse("a * b^4 - c(c-2)".to_string())),
         );
     }
 
     #[bench]
     fn bench_tokenizer(b: &mut Bencher) {
         let expression = "sum_(iiiiiiiii=1)^n i^3=((n(n+1))/2)^2";
-        b.iter(|| {
-            let mut tokenizer = Tokenizer::new(expression.to_string());
-            let _ = tokenizer.parse();
-        });
+        b.iter(|| parse(expression.to_string()));
     }
 }
