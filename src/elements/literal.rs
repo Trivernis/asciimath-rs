@@ -19,6 +19,7 @@ pub enum Literal {
 #[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub struct PlainText {
     pub(crate) text: String,
+    pub(crate) formatting: Option<FontCommand>,
 }
 
 #[derive(Debug, Clone, PartialOrd, PartialEq)]

@@ -6,7 +6,7 @@ use crate::elements::special::{
     Expression, Frac, Integral, OIntegral, Pow, Prod, Root, Special, Sqrt, Sub, Sum,
 };
 use crate::elements::Element;
-use crate::tokens::{Grouping, Misc, Operation, Text, Token};
+use crate::tokens::{FontCommand, Grouping, Misc, Operation, Text, Token};
 use crate::utils::Boxed;
 
 pub struct TreeParser {
@@ -107,7 +107,33 @@ impl TreeParser {
                     None
                 }
             }
+            Token::Font(f) => {
+                if let Some(literal) = self.parse_formatted_text(f) {
+                    Some(Element::Literal(literal))
+                } else {
+                    None
+                }
+            }
             _ => None,
+        }
+    }
+
+    fn parse_formatted_text(&mut self, token: FontCommand) -> Option<Literal> {
+        let next_token = if let Some(token) = self.peek() {
+            Some(token.clone())
+        } else {
+            None
+        };
+        if let Some(Token::Text(Text::Plain(p))) = next_token {
+            self.step();
+            Some(Literal::Text(PlainText {
+                text: p,
+                formatting: Some(token),
+            }))
+        } else {
+            Some(Literal::Symbol(Symbol {
+                symbol: token.to_string(),
+            }))
         }
     }
 
@@ -115,7 +141,10 @@ impl TreeParser {
         match token {
             Text::Symbol(s) => Some(Literal::Symbol(Symbol { symbol: s })),
             Text::Number(n) => Some(Literal::Number(Number { number: n })),
-            Text::Plain(p) => Some(Literal::Text(PlainText { text: p })),
+            Text::Plain(p) => Some(Literal::Text(PlainText {
+                text: p,
+                formatting: None,
+            })),
             _ => None,
         }
     }

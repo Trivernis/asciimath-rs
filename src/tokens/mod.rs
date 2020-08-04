@@ -228,16 +228,6 @@ pub enum Greek {
 }
 
 #[derive(Debug, Clone, PartialOrd, PartialEq)]
-pub enum FontCommand {
-    Big,
-    BigOutline,
-    Cursive,
-    TText,
-    Fr,
-    SansSerif,
-}
-
-#[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub enum Function {
     Sin,
     Cos,
@@ -268,4 +258,27 @@ pub enum Function {
     Max,
     F,
     G,
+}
+
+#[derive(Debug, Clone, PartialOrd, PartialEq)]
+pub enum FontCommand {
+    Big,
+    BigOutline,
+    Cursive,
+    TText,
+    Fr,
+    SansSerif,
+}
+
+impl FontCommand {
+    pub fn to_string(&self) -> String {
+        match self {
+            FontCommand::BigOutline => "bbb".to_string(),
+            FontCommand::Big => "bb".to_string(),
+            FontCommand::SansSerif => "sf".to_string(),
+            FontCommand::Fr => "fr".to_string(),
+            FontCommand::TText => "tt".to_string(),
+            FontCommand::Cursive => "cc".to_string(),
+        }
+    }
 }

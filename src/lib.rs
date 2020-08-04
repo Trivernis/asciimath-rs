@@ -147,7 +147,7 @@ mod tests {
 
     #[test]
     fn it_parses_into_a_tree2() {
-        let str_expression = "sum_2^3 + abs(4^4) - 1^(2*2)_2";
+        let str_expression = "bb\"test\" bb";
         let mut tokenizer = Tokenizer::new(str_expression.to_string());
         let tokens = tokenizer.parse();
         let mut tree_parser = TreeParser::new(tokens.clone());
