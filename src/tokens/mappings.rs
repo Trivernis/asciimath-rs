@@ -209,7 +209,6 @@ pub fn get_accent_mappings() -> Vec<HashMap<TokenPattern, Accent>> {
         G_UNDERSET => Accent::UnderSet,
         G_UNDERBRACE => Accent::UnderBrace,
         G_OVERBRACE => Accent::OverBrace,
-        G_COLOR => Accent::Color,
         G_CANCEL => Accent::Cancel,
     }]
 }

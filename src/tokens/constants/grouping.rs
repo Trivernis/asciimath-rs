@@ -15,3 +15,5 @@ pub const G_ABS: &'static [&str] = &["abs"];
 pub const G_FLOOR: &'static [&str] = &["floor"];
 pub const G_CEIL: &'static [&str] = &["ceil"];
 pub const G_NORM: &'static [&str] = &["norm"];
+
+pub const T_LPAREN: char = ')';
