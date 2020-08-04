@@ -14,7 +14,9 @@ mod tokens;
 #[cfg(test)]
 mod tests {
     use crate::parsing::tokenizer::Tokenizer;
+    use crate::parsing::tree_parser::TreeParser;
     use crate::tokens::{Function, Grouping, Misc, Operation, Relation, Text, Token};
+    use std::fs;
     use test::Bencher;
 
     #[test]
@@ -110,6 +112,19 @@ mod tests {
                 Token::Text(Text::Symbol("a".to_string()))
             ]
         )
+    }
+
+    //#[test]
+    fn it_parses_into_a_tree() {
+        let expression = "sum_2^3 + 4^4";
+        let mut tokenizer = Tokenizer::new(expression.to_string());
+        let tokens = tokenizer.parse();
+        let mut tree_parser = TreeParser::new(tokens.clone());
+        let expression = tree_parser.parse();
+        fs::write(
+            "test-files/test.txt",
+            format!("{:?}\n\n{:?}", tokens, expression),
+        );
     }
 
     #[bench]

@@ -12,3 +12,9 @@ pub enum Element {
     Special(Special),
     Group(Group),
 }
+
+impl Element {
+    pub fn boxed(self) -> Box<Self> {
+        Box::new(self)
+    }
+}

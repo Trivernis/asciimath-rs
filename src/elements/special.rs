@@ -10,7 +10,7 @@ pub enum Special {
     Sum(Sum),
     Prod(Prod),
     Frac(Frac),
-    Exp(Exp),
+    Pow(Pow),
     Sqrt(Sqrt),
     Root(Root),
     Integral(Integral),
@@ -19,47 +19,76 @@ pub enum Special {
 
 #[derive(Clone, Debug)]
 pub struct Sum {
-    top: Option<Expression>,
-    bottom: Option<Expression>,
+    pub top: Option<Box<Element>>,
+    pub bottom: Option<Box<Element>>,
 }
 
 #[derive(Clone, Debug)]
 pub struct Prod {
-    top: Box<Expression>,
-    bottom: Box<Expression>,
+    pub top: Option<Box<Element>>,
+    pub bottom: Option<Box<Element>>,
 }
 
 #[derive(Clone, Debug)]
 pub struct Frac {
-    top: Box<Expression>,
-    bottom: Box<Expression>,
+    pub(crate) top: Box<Element>,
+    pub(crate) bottom: Box<Element>,
 }
 
 #[derive(Clone, Debug)]
-pub struct Exp {
-    base: Box<Element>,
-    exp: Box<Expression>,
+pub struct Pow {
+    pub(crate) exp: Box<Element>,
 }
 
 #[derive(Clone, Debug)]
 pub struct Sqrt {
-    inner: Box<Expression>,
+    pub(crate) inner: Box<Element>,
 }
 
 #[derive(Clone, Debug)]
 pub struct Root {
-    base: Box<Expression>,
-    inner: Box<Expression>,
+    pub(crate) base: Box<Element>,
+    pub(crate) inner: Box<Element>,
 }
 
 #[derive(Clone, Debug)]
 pub struct Integral {
-    top: Box<Expression>,
-    bottom: Box<Expression>,
+    pub(crate) top: Option<Box<Element>>,
+    pub(crate) bottom: Option<Box<Element>>,
 }
 
 #[derive(Clone, Debug)]
 pub struct OIntegral {
-    top: Box<Expression>,
-    bottom: Box<Expression>,
+    pub(crate) top: Option<Box<Element>>,
+    pub(crate) bottom: Option<Box<Element>>,
+}
+
+impl Expression {
+    pub fn new() -> Self {
+        Self {
+            children: Vec::new(),
+        }
+    }
+
+    pub fn add_child(&mut self, child: Element) {
+        self.children.push(child)
+    }
+}
+
+impl Sum {
+    pub fn new() -> Self {
+        Self {
+            bottom: None,
+            top: None,
+        }
+    }
+}
+
+impl Prod {
+    pub fn new() -> Self {
+        Self {
+            bottom: None,
+            top: None,
+        }
+    }
 }
