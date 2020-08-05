@@ -28,12 +28,14 @@ pub fn parse(content: String) -> Expression {
 
 #[cfg(test)]
 mod tests {
+    use crate::elements::group::{Brackets, Group, Matrix};
     use crate::elements::literal::{Literal, Number};
     use crate::elements::special::{Expression, Special, Sum};
     use crate::elements::Element;
     use crate::parse;
     use crate::parsing::tokenizer::Tokenizer;
     use crate::parsing::tree_parser::TreeParser;
+    use crate::tokens::Function::Exp;
     use crate::tokens::{Function, Grouping, Misc, Operation, Relation, Text, Token};
     use crate::utils::Boxed;
     use std::fs;
@@ -186,11 +188,100 @@ mod tests {
         assert_eq!(expression, test_expression)
     }
 
-    //#[test]
-    fn it_parses_into_a_tree2() {
+    #[test]
+    fn it_parses_matrices() {
+        assert_eq!(
+            parse("[[1, 2],[3,4]]".to_string()),
+            Expression {
+                children: vec![Element::Group(Group::Matrix(Matrix {
+                    inner: vec![
+                        vec![
+                            Expression {
+                                children: vec![Element::Literal(Literal::Number(Number {
+                                    number: "1".to_string()
+                                })),]
+                            },
+                            Expression {
+                                children: vec![Element::Literal(Literal::Number(Number {
+                                    number: "2".to_string()
+                                })),]
+                            }
+                        ],
+                        vec![
+                            Expression {
+                                children: vec![Element::Literal(Literal::Number(Number {
+                                    number: "3".to_string()
+                                })),]
+                            },
+                            Expression {
+                                children: vec![Element::Literal(Literal::Number(Number {
+                                    number: "4".to_string()
+                                })),]
+                            }
+                        ]
+                    ]
+                }))]
+            }
+        );
+    }
+
+    #[test]
+    fn it_rejects_invalid_matrices() {
+        assert_eq!(
+            parse("[[1, 3, 4],[3,4]]".to_string()),
+            Expression {
+                children: vec![Element::Group(Group::Brackets(Brackets {
+                    inner: Expression {
+                        children: vec![
+                            Element::Group(Group::Brackets(Brackets {
+                                inner: Expression {
+                                    children: vec![
+                                        Element::Literal(Literal::Number(Number {
+                                            number: "1".to_string()
+                                        })),
+                                        Element::Group(Group::MSep),
+                                        Element::Literal(Literal::Number(Number {
+                                            number: "3".to_string()
+                                        })),
+                                        Element::Group(Group::MSep),
+                                        Element::Literal(Literal::Number(Number {
+                                            number: "4".to_string()
+                                        }))
+                                    ]
+                                }
+                                .boxed()
+                            })),
+                            Element::Group(Group::MSep),
+                            Element::Group(Group::Brackets(Brackets {
+                                inner: Expression {
+                                    children: vec![
+                                        Element::Literal(Literal::Number(Number {
+                                            number: "3".to_string()
+                                        })),
+                                        Element::Group(Group::MSep),
+                                        Element::Literal(Literal::Number(Number {
+                                            number: "4".to_string()
+                                        }))
+                                    ]
+                                }
+                                .boxed()
+                            }))
+                        ]
+                    }
+                    .boxed()
+                }))]
+            }
+        );
+    }
+
+    #[test]
+    fn it_parses_into_a_tree3() {
         fs::write(
             "test-files/test.txt",
-            format!("{:#?}", parse("color(red)(a) * b^4 - c(c-2)".to_string())),
+            format!(
+                "{:#?}",
+                parse("color(red)(a) * b^4 - c(c-2) [[1, 3, 2 + 2],[3 - x, 4]".to_string())
+            ),
         );
     }
 
