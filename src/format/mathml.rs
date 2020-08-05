@@ -1,5 +1,9 @@
 use crate::elements::accent::{Color, ExpressionAccent, GenericAccent, OverSet, UnderSet};
+use crate::elements::group::{
+    Abs, Angles, Braces, Brackets, Ceil, Floor, Group, Matrix, Norm, Parentheses, Vector, XGroup,
+};
 use crate::elements::literal::{Literal, Number, PlainText, Symbol};
+use crate::elements::special::Expression;
 use crate::elements::Element;
 use crate::tokens::{
     Accent, Arrow, FontCommand, Function, Greek, Logical, Misc, Operation, Relation,
@@ -357,6 +361,151 @@ impl ToMathML for GenericAccent {
             ),
             _ => self.inner.to_mathml(),
         }
+    }
+}
+
+impl ToMathML for Group {
+    fn to_mathml(&self) -> String {
+        match self {
+            Group::Vector(v) => v.to_mathml(),
+            Group::MSep => ",".to_string(),
+            Group::Parentheses(p) => p.to_mathml(),
+            Group::Brackets(b) => b.to_mathml(),
+            Group::Braces(b) => b.to_mathml(),
+            Group::Angles(a) => a.to_mathml(),
+            Group::XGroup(x) => x.to_mathml(),
+            Group::Abs(a) => a.to_mathml(),
+            Group::Floor(f) => f.to_mathml(),
+            Group::Ceil(c) => c.to_mathml(),
+            Group::Norm(n) => n.to_mathml(),
+            Group::Matrix(m) => m.to_mathml(),
+        }
+    }
+}
+
+impl ToMathML for Parentheses {
+    fn to_mathml(&self) -> String {
+        format!(
+            "<mrow><mo>(</mo>{}<mo>)</mo></mrow>",
+            self.inner.to_mathml()
+        )
+    }
+}
+
+impl ToMathML for Brackets {
+    fn to_mathml(&self) -> String {
+        format!(
+            "<mrow><mo>[</mo>{}<mo>]</mo></mrow>",
+            self.inner.to_mathml()
+        )
+    }
+}
+
+impl ToMathML for Braces {
+    fn to_mathml(&self) -> String {
+        format!(
+            "<mrow><mo>&lbrace;</mo>{}<mo>&rbrace;</mo></mrow>",
+            self.inner.to_mathml()
+        )
+    }
+}
+
+impl ToMathML for Angles {
+    fn to_mathml(&self) -> String {
+        format!(
+            "<mrow><mo>&#10216;</mo>{}<mo>&#10217;</mo></mrow>",
+            self.inner.to_mathml()
+        )
+    }
+}
+
+impl ToMathML for XGroup {
+    fn to_mathml(&self) -> String {
+        format!(
+            "<mrow><mo>(x</mo>{}<mo>x)</mo></mrow>",
+            self.inner.to_mathml()
+        )
+    }
+}
+
+impl ToMathML for Abs {
+    fn to_mathml(&self) -> String {
+        format!(
+            "<mrow><mo>|</mo>{}<mo>|</mo></mrow>",
+            self.inner.to_mathml()
+        )
+    }
+}
+
+impl ToMathML for Floor {
+    fn to_mathml(&self) -> String {
+        format!(
+            "<mrow><mo>&lfloor;</mo>{}<mo>&rfloor;</mo></mrow>",
+            self.inner.to_mathml()
+        )
+    }
+}
+
+impl ToMathML for Ceil {
+    fn to_mathml(&self) -> String {
+        format!(
+            "<mrow><mo>&lceil;</mo>{}<mo>&rceil;</mo></mrow>",
+            self.inner.to_mathml()
+        )
+    }
+}
+
+impl ToMathML for Norm {
+    fn to_mathml(&self) -> String {
+        format!(
+            "<mrow><mo>||</mo>{}<mo>||</mo></mrow>",
+            self.inner.to_mathml()
+        )
+    }
+}
+
+impl ToMathML for Matrix {
+    fn to_mathml(&self) -> String {
+        format!(
+            "<mrow><mo>[</mo><mtable>{}</mtable><mo>]</mo></mrow>",
+            self.inner.iter().fold("".to_string(), |a, b| format!(
+                "{}<mtr>{}</mtr>",
+                a,
+                b.iter().fold("".to_string(), |a, b| format!(
+                    "{}<mtd>{}</mtd>",
+                    a,
+                    b.to_mathml()
+                ))
+            ))
+        )
+    }
+}
+
+impl ToMathML for Vector {
+    fn to_mathml(&self) -> String {
+        format!(
+            "<mrow><mo>(</mo><mtable>{}</mtable><mo>)</mo></mrow>",
+            self.inner.iter().fold("".to_string(), |a, b| format!(
+                "{}<mtr>{}</mtr>",
+                a,
+                b.iter().fold("".to_string(), |a, b| format!(
+                    "{}<mtd>{}</mtd>",
+                    a,
+                    b.to_mathml()
+                ))
+            ))
+        )
+    }
+}
+
+impl ToMathML for Expression {
+    fn to_mathml(&self) -> String {
+        format!(
+            "<mrow>{}</mrow>",
+            self.children
+                .iter()
+                .fold("".to_string(), |a, b| format!("{}{}", a, b.to_mathml()))
+        )
     }
 }
 
