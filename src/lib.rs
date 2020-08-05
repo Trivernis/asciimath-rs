@@ -35,7 +35,6 @@ mod tests {
     use crate::parse;
     use crate::parsing::tokenizer::Tokenizer;
     use crate::parsing::tree_parser::TreeParser;
-    use crate::tokens::Function::Exp;
     use crate::tokens::{Function, Grouping, Misc, Operation, Relation, Text, Token};
     use crate::utils::Boxed;
     use std::fs;
@@ -272,6 +271,24 @@ mod tests {
                 }))]
             }
         );
+        assert_eq!(
+            parse("[[1]]".to_string()),
+            Expression {
+                children: vec![Element::Group(Group::Brackets(Brackets {
+                    inner: Expression {
+                        children: vec![Element::Group(Group::Brackets(Brackets {
+                            inner: Expression {
+                                children: vec![Element::Literal(Literal::Number(Number {
+                                    number: "1".to_string()
+                                })),]
+                            }
+                            .boxed()
+                        })),]
+                    }
+                    .boxed()
+                }))]
+            }
+        );
     }
 
     #[test]
@@ -340,7 +357,8 @@ mod tests {
                     "color(red)(a) * b^4 - c(c-2) [[1, 3, 2 + 2],[3 - x, 4] ((2),(3))".to_string()
                 )
             ),
-        );
+        )
+        .unwrap();
     }
 
     #[bench]

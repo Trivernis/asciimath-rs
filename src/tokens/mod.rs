@@ -152,10 +152,6 @@ pub enum Grouping {
     Floor,
     Ceil,
     Norm,
-    MatrixBegin,
-    MatrixEnd,
-    VecBegin,
-    VecEnd,
     MSep,
 }
 

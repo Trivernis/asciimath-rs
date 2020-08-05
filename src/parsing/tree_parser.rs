@@ -451,7 +451,11 @@ impl TreeParser {
             false
         } else {
             let first_length = matrix.first().unwrap().len();
-            matrix.iter().all(|e| e.len() == first_length)
+            if first_length * matrix.len() == 1 {
+                false
+            } else {
+                matrix.iter().all(|e| e.len() == first_length)
+            }
         }
     }
 }
