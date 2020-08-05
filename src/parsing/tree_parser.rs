@@ -283,29 +283,9 @@ impl TreeParser {
                 }
             }
             // Remapping the expression into a matrix
-            let expression_matrix = expressions
-                .iter()
-                .map(|e| {
-                    let children = e.children.clone();
-                    let mut expressions = Vec::new();
+            let expression_matrix = self.transform_vec_to_matrix(expressions);
 
-                    for elements in children.split(|e| e == &Element::Group(Group::MSep)) {
-                        expressions.push(Expression {
-                            children: elements.to_vec(),
-                        })
-                    }
-                    expressions
-                })
-                .collect::<Vec<Vec<Expression>>>();
-
-            // a matrix with no elements is invalid
-            if expression_matrix.is_empty() {
-                self.index = start_index;
-                return None;
-            }
-            /// a matrix with rows of different lengths is invalid
-            let first_length = expression_matrix.first().unwrap().len();
-            if !expression_matrix.iter().all(|e| e.len() == first_length) {
+            if !self.validate_matrix(&expression_matrix) {
                 self.index = start_index;
                 None
             } else {
@@ -341,11 +321,15 @@ impl TreeParser {
                     break;
                 }
             }
-            if expressions.is_empty() {
+            let expression_matrix = self.transform_vec_to_matrix(expressions);
+
+            if !self.validate_matrix(&expression_matrix) {
                 self.index = start_index;
                 None
             } else {
-                Some(Group::Vector(Vector { inner: expressions }))
+                Some(Group::Vector(Vector {
+                    inner: expression_matrix,
+                }))
             }
         } else {
             None
@@ -440,6 +424,34 @@ impl TreeParser {
             }
         } else {
             None
+        }
+    }
+
+    /// Remaps an expresion vector into a matrix of expressions by splitting on each MSep token
+    fn transform_vec_to_matrix(&self, expressions: Vec<Expression>) -> Vec<Vec<Expression>> {
+        expressions
+            .iter()
+            .map(|e| {
+                let children = e.children.clone();
+                let mut expressions = Vec::new();
+
+                for elements in children.split(|e| e == &Element::Group(Group::MSep)) {
+                    expressions.push(Expression {
+                        children: elements.to_vec(),
+                    })
+                }
+                expressions
+            })
+            .collect::<Vec<Vec<Expression>>>()
+    }
+
+    /// Validates a matrix of expressions if every row has the same length
+    fn validate_matrix(&self, matrix: &Vec<Vec<Expression>>) -> bool {
+        if matrix.is_empty() {
+            false
+        } else {
+            let first_length = matrix.first().unwrap().len();
+            matrix.iter().all(|e| e.len() == first_length)
         }
     }
 }

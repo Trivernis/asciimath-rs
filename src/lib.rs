@@ -281,16 +281,49 @@ mod tests {
             Expression {
                 children: vec![Element::Group(Group::Vector(Vector {
                     inner: vec![
-                        Expression {
+                        vec![Expression {
                             children: vec![Element::Literal(Literal::Number(Number {
                                 number: "1".to_string()
                             }))]
-                        },
-                        Expression {
+                        }],
+                        vec![Expression {
                             children: vec![Element::Literal(Literal::Number(Number {
                                 number: "2".to_string()
                             }))]
-                        }
+                        }]
+                    ]
+                }))]
+            }
+        );
+        assert_eq!(
+            parse("((1, 3), (2, 5))".to_string()),
+            Expression {
+                children: vec![Element::Group(Group::Vector(Vector {
+                    inner: vec![
+                        vec![
+                            Expression {
+                                children: vec![Element::Literal(Literal::Number(Number {
+                                    number: "1".to_string()
+                                }))]
+                            },
+                            Expression {
+                                children: vec![Element::Literal(Literal::Number(Number {
+                                    number: "3".to_string()
+                                }))]
+                            }
+                        ],
+                        vec![
+                            Expression {
+                                children: vec![Element::Literal(Literal::Number(Number {
+                                    number: "2".to_string()
+                                }))]
+                            },
+                            Expression {
+                                children: vec![Element::Literal(Literal::Number(Number {
+                                    number: "5".to_string()
+                                }))]
+                            }
+                        ]
                     ]
                 }))]
             }

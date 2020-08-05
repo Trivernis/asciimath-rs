@@ -68,5 +68,5 @@ pub struct Matrix {
 
 #[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub struct Vector {
-    pub inner: Vec<Expression>,
+    pub inner: Vec<Vec<Expression>>,
 }
