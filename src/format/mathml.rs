@@ -1,9 +1,27 @@
-use crate::elements::literal::{Number, PlainText, Symbol};
-use crate::tokens::{Arrow, FontCommand, Function, Greek, Logical, Misc, Relation};
+use crate::elements::literal::{Literal, Number, PlainText, Symbol};
+use crate::tokens::{Arrow, FontCommand, Function, Greek, Logical, Misc, Operation, Relation};
 use htmlescape::encode_minimal;
 
 pub trait ToMathML {
     fn to_mathml(&self) -> String;
+}
+
+impl ToMathML for Literal {
+    fn to_mathml(&self) -> String {
+        match self {
+            Literal::Text(t) => t.to_mathml(),
+            Literal::Symbol(s) => s.to_mathml(),
+            Literal::Number(n) => n.to_mathml(),
+            Literal::Greek(g) => g.to_mathml(),
+            Literal::FontCommand(f) => f.to_mathml(),
+            Literal::Relation(r) => r.to_mathml(),
+            Literal::Function(f) => f.to_mathml(),
+            Literal::Logical(l) => l.to_mathml(),
+            Literal::Arrow(a) => a.to_mathml(),
+            Literal::Misc(m) => m.to_mathml(),
+            Literal::Operation(o) => o.to_mathml(),
+        }
+    }
 }
 
 impl ToMathML for Greek {
@@ -232,5 +250,38 @@ impl ToMathML for Misc {
         };
 
         format!("<mi>{}</mi>", inner)
+    }
+}
+
+impl ToMathML for Operation {
+    fn to_mathml(&self) -> String {
+        let inner = match self {
+            Operation::Plus => "&plus;",
+            Operation::Minus => "&minus;",
+            Operation::CDot => "&#8729;",
+            Operation::Ast => "&lowast;",
+            Operation::Star => "&Star;",
+            Operation::Slash => "/",
+            Operation::Backslash => "&setminus;",
+            Operation::Times => "&times;",
+            Operation::Div => "&divide;",
+            Operation::LTimes => "&ltimes;",
+            Operation::RTimes => "&rtimes;",
+            Operation::Bowtie => "&bowtie;",
+            Operation::Circ => "&compfn;",
+            Operation::OPlus => "&oplus;",
+            Operation::OTimes => "&otimes;",
+            Operation::ODot => "&odot;",
+            Operation::Wedge => "&and;",
+            Operation::BidWedge => "&xwedge;",
+            Operation::Vee => "&or;",
+            Operation::BigVee => "&xvee;",
+            Operation::Cap => "&cap;",
+            Operation::BigCap => "&xcap;",
+            Operation::Cup => "&cup;",
+            Operation::BigCup => "&xcup;",
+            _ => "",
+        };
+        format!("<mo>{}</mo>", inner)
     }
 }

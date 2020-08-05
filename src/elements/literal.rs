@@ -2,7 +2,6 @@ use crate::tokens::{Arrow, FontCommand, Function, Greek, Logical, Misc, Operatio
 
 #[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub enum Literal {
-    Integer,
     Text(PlainText),
     Symbol(Symbol),
     Number(Number),
