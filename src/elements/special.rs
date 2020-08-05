@@ -39,11 +39,13 @@ pub struct Frac {
 
 #[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub struct Pow {
+    pub(crate) base: Box<Element>,
     pub(crate) exp: Box<Element>,
 }
 
 #[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub struct Sub {
+    pub(crate) base: Box<Element>,
     pub(crate) lower: Box<Element>,
 }
 

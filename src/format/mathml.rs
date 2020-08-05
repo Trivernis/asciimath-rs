@@ -3,7 +3,9 @@ use crate::elements::group::{
     Abs, Angles, Braces, Brackets, Ceil, Floor, Group, Matrix, Norm, Parentheses, Vector, XGroup,
 };
 use crate::elements::literal::{Literal, Number, PlainText, Symbol};
-use crate::elements::special::Expression;
+use crate::elements::special::{
+    Expression, Frac, Integral, OIntegral, Pow, Prod, Root, Special, Sqrt, Sub, Sum,
+};
 use crate::elements::Element;
 use crate::tokens::{
     Accent, Arrow, FontCommand, Function, Greek, Logical, Misc, Operation, Relation,
@@ -266,7 +268,7 @@ impl ToMathML for Operation {
         let inner = match self {
             Operation::Plus => "&plus;",
             Operation::Minus => "&minus;",
-            Operation::CDot => "&#8729;",
+            Operation::CDot => "&sdot;",
             Operation::Ast => "&lowast;",
             Operation::Star => "&Star;",
             Operation::Slash => "/",
@@ -498,6 +500,159 @@ impl ToMathML for Vector {
     }
 }
 
+impl ToMathML for Special {
+    fn to_mathml(&self) -> String {
+        match self {
+            Special::Sum(s) => s.to_mathml(),
+            Special::Prod(p) => p.to_mathml(),
+            Special::Frac(f) => f.to_mathml(),
+            Special::Pow(p) => p.to_mathml(),
+            Special::Sub(s) => s.to_mathml(),
+            Special::Sqrt(s) => s.to_mathml(),
+            Special::Root(r) => r.to_mathml(),
+            Special::Integral(i) => i.to_mathml(),
+            Special::OIntegral(i) => i.to_mathml(),
+        }
+    }
+}
+
+impl ToMathML for Sum {
+    fn to_mathml(&self) -> String {
+        if let Some(bottom) = &self.bottom {
+            if let Some(top) = &self.top {
+                format!(
+                    "<munderover><mi>&sum;</mi>{}{}</munderover>",
+                    bottom.to_mathml(),
+                    top.to_mathml()
+                )
+            } else {
+                format!("<munder><mi>&sum;</mi>{}</munder>", bottom.to_mathml())
+            }
+        } else if let Some(top) = &self.top {
+            format!("<mover><mi>&sum;<mi>{}</mover>", top.to_mathml())
+        } else {
+            format!("<mi>&sum;</mi>")
+        }
+    }
+}
+
+impl ToMathML for Prod {
+    fn to_mathml(&self) -> String {
+        if let Some(bottom) = &self.bottom {
+            if let Some(top) = &self.top {
+                format!(
+                    "<munderover><mi>&prod;</mi>{}{}</munderover>",
+                    bottom.to_mathml(),
+                    top.to_mathml()
+                )
+            } else {
+                format!("<munder><mi>&prod;</mi>{}</munder>", bottom.to_mathml())
+            }
+        } else if let Some(top) = &self.top {
+            format!("<mover><mi>&prod;<mi>{}</mover>", top.to_mathml())
+        } else {
+            format!("<mi>&prod;</mi>")
+        }
+    }
+}
+
+impl ToMathML for Frac {
+    fn to_mathml(&self) -> String {
+        format!(
+            "<mfrac>{}{}</mfrac>",
+            self.top.to_mathml(),
+            self.bottom.to_mathml()
+        )
+    }
+}
+
+impl ToMathML for Sqrt {
+    fn to_mathml(&self) -> String {
+        format!("<msqrt>{}</msqrt>", self.inner.to_mathml())
+    }
+}
+
+impl ToMathML for Root {
+    fn to_mathml(&self) -> String {
+        format!(
+            "<mroot>{}{}</mroot>",
+            self.base.to_mathml(),
+            self.inner.to_mathml()
+        )
+    }
+}
+
+impl ToMathML for Pow {
+    fn to_mathml(&self) -> String {
+        format!(
+            "<msup>{}{}</msup>",
+            self.base.to_mathml(),
+            self.exp.to_mathml()
+        )
+    }
+}
+
+impl ToMathML for Sub {
+    fn to_mathml(&self) -> String {
+        format!(
+            "<msub>{}{}</msub>",
+            self.base.to_mathml(),
+            self.lower.to_mathml()
+        )
+    }
+}
+
+impl ToMathML for Integral {
+    fn to_mathml(&self) -> String {
+        if let Some(bottom) = &self.bottom {
+            if let Some(top) = &self.top {
+                format!(
+                    "<munderover><mi>&int;</mi>{}{}</munderover>",
+                    bottom.to_mathml(),
+                    top.to_mathml()
+                )
+            } else {
+                format!("<munder><mi>&int;</mi>{}</munder>", bottom.to_mathml())
+            }
+        } else if let Some(top) = &self.top {
+            format!("<mover><mi>&int;<mi>{}</mover>", top.to_mathml())
+        } else {
+            format!("<mi>&int;</mi>")
+        }
+    }
+}
+
+impl ToMathML for OIntegral {
+    fn to_mathml(&self) -> String {
+        if let Some(bottom) = &self.bottom {
+            if let Some(top) = &self.top {
+                format!(
+                    "<munderover><mi>&conint;</mi>{}{}</munderover>",
+                    bottom.to_mathml(),
+                    top.to_mathml()
+                )
+            } else {
+                format!("<munder><mi>&conint;</mi>{}</munder>", bottom.to_mathml())
+            }
+        } else if let Some(top) = &self.top {
+            format!("<mover><mi>&conint;<mi>{}</mover>", top.to_mathml())
+        } else {
+            format!("<mi>&conint;</mi>")
+        }
+    }
+}
+
+impl ToMathML for ExpressionAccent {
+    fn to_mathml(&self) -> String {
+        match self {
+            ExpressionAccent::Generic(g) => g.to_mathml(),
+            ExpressionAccent::OverSet(o) => o.to_mathml(),
+            ExpressionAccent::UnderSet(u) => u.to_mathml(),
+            ExpressionAccent::Color(c) => c.to_mathml(),
+        }
+    }
+}
+
 impl ToMathML for Expression {
     fn to_mathml(&self) -> String {
         format!(
@@ -511,6 +666,11 @@ impl ToMathML for Expression {
 
 impl ToMathML for Element {
     fn to_mathml(&self) -> String {
-        unimplemented!()
+        match self {
+            Element::Special(s) => s.to_mathml(),
+            Element::Literal(l) => l.to_mathml(),
+            Element::Group(g) => g.to_mathml(),
+            Element::Accent(a) => a.to_mathml(),
+        }
     }
 }

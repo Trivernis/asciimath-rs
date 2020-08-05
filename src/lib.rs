@@ -32,6 +32,7 @@ mod tests {
     use crate::elements::literal::{Literal, Number};
     use crate::elements::special::{Expression, Special, Sum};
     use crate::elements::Element;
+    use crate::format::mathml::ToMathML;
     use crate::parse;
     use crate::parsing::tokenizer::Tokenizer;
     use crate::parsing::tree_parser::TreeParser;
@@ -347,15 +348,19 @@ mod tests {
         )
     }
 
+    #[allow(dead_code)]
     //#[test]
-    fn it_parses_into_a_tree3() {
+    fn it_writes_mathml() {
+        let str_expression =
+            "sqrt 1 in NN implies 2^4 + sum_(k = 1)^3 - ((1),(2)) [[2, 3 + 3],[4, 5]]";
+        let expression = parse(str_expression.to_string());
         fs::write(
-            "test-files/test.txt",
+            "test-files/test.html",
             format!(
-                "{:#?}",
-                parse(
-                    "color(red)(a) * b^4 - c(c-2) [[1, 3, 2 + 2],[3 - x, 4] ((2),(3))".to_string()
-                )
+                "<html><body><pre>{}</pre><math>{}</math><pre>{:#?}</pre></body></html>",
+                str_expression,
+                expression.to_mathml(),
+                expression,
             ),
         )
         .unwrap();
