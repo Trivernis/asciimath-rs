@@ -1,6 +1,10 @@
+use crate::elements::accent::{Color, ExpressionAccent, GenericAccent, OverSet, UnderSet};
 use crate::elements::literal::{Literal, Number, PlainText, Symbol};
-use crate::tokens::{Arrow, FontCommand, Function, Greek, Logical, Misc, Operation, Relation};
-use htmlescape::encode_minimal;
+use crate::elements::Element;
+use crate::tokens::{
+    Accent, Arrow, FontCommand, Function, Greek, Logical, Misc, Operation, Relation,
+};
+use htmlescape::{encode_attribute, encode_minimal};
 
 pub trait ToMathML {
     fn to_mathml(&self) -> String;
@@ -87,11 +91,11 @@ impl ToMathML for FontCommand {
     fn to_mathml(&self) -> String {
         match self {
             FontCommand::Big => "bold".to_string(),
-            FontCommand::BigOutline => "double-struck",
-            FontCommand::Cursive => "italic",
-            FontCommand::TText => "script",
-            FontCommand::Fr => "bold-fraktur",
-            FontCommand::SansSerif => "sans-serif",
+            FontCommand::BigOutline => "double-struck".to_string(),
+            FontCommand::Cursive => "italic".to_string(),
+            FontCommand::TText => "script".to_string(),
+            FontCommand::Fr => "bold-fraktur".to_string(),
+            FontCommand::SansSerif => "sans-serif".to_string(),
         }
     }
 }
@@ -283,5 +287,81 @@ impl ToMathML for Operation {
             _ => "",
         };
         format!("<mo>{}</mo>", inner)
+    }
+}
+
+impl ToMathML for Accent {
+    fn to_mathml(&self) -> String {
+        match self {
+            Accent::Hat => "&circ;".to_string(),
+            Accent::Overline => "&macr;".to_string(),
+            Accent::Underline => "&ndash;".to_string(),
+            Accent::Vec => "&#8594;".to_string(),
+            Accent::Dot => ".".to_string(),
+            Accent::DDot => "..".to_string(),
+            Accent::UnderBrace => "&#9183;".to_string(),
+            Accent::OverBrace => "&#9182;".to_string(),
+            Accent::Cancel => "&#10187;".to_string(),
+            _ => "".to_string(),
+        }
+    }
+}
+
+impl ToMathML for OverSet {
+    fn to_mathml(&self) -> String {
+        format!(
+            "<mover accentover='true'><mrow>{}</mrow><mo>{}</mo>",
+            self.bottom.to_mathml(),
+            self.top.to_mathml()
+        )
+    }
+}
+
+impl ToMathML for UnderSet {
+    fn to_mathml(&self) -> String {
+        format!(
+            "<munder accentunder='true'><mrow>{}</mrow><mo>{}</mo>",
+            self.top.to_mathml(),
+            self.bottom.to_mathml(),
+        )
+    }
+}
+
+impl ToMathML for Color {
+    fn to_mathml(&self) -> String {
+        format!(
+            "<mstyle mathcolor='{}'>{}</mstyle>",
+            encode_attribute(self.color.as_str()),
+            self.inner.to_mathml()
+        )
+    }
+}
+
+impl ToMathML for GenericAccent {
+    fn to_mathml(&self) -> String {
+        match self.accent {
+            Accent::Hat
+            | Accent::Overline
+            | Accent::Vec
+            | Accent::Dot
+            | Accent::DDot
+            | Accent::OverBrace => format!(
+                "<mover accentover='true'><mrow>{}</mrow><mo>{}</mo></mover>",
+                self.inner.to_mathml(),
+                self.accent.to_mathml()
+            ),
+            Accent::Underline | Accent::UnderBrace => format!(
+                "<munder accentunder='true'><mrow>{}</mrow><mo>{}</mo></mover>",
+                self.inner.to_mathml(),
+                self.accent.to_mathml()
+            ),
+            _ => self.inner.to_mathml(),
+        }
+    }
+}
+
+impl ToMathML for Element {
+    fn to_mathml(&self) -> String {
+        unimplemented!()
     }
 }
