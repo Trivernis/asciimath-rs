@@ -1,3 +1,4 @@
+use crate::elements::Element;
 use crate::tokens::constants::accents::G_COLOR;
 use crate::tokens::constants::grouping::T_LPAREN;
 use crate::tokens::constants::misc::{A_TEXT, G_NUMALLOWED};
@@ -7,6 +8,7 @@ use crate::tokens::mappings::{
     get_greek_mappings, get_grouping_mappings, get_logical_mappings, get_misc_mappings,
     get_operation_mappings, get_relation_mapping,
 };
+use crate::tokens::Grouping::MatrixEnd;
 use crate::tokens::{
     Accent, Arrow, FontCommand, Function, Greek, Grouping, Logical, Misc, Operation, Relation,
     Text, Token,

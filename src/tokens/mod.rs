@@ -152,6 +152,11 @@ pub enum Grouping {
     Floor,
     Ceil,
     Norm,
+    MatrixBegin,
+    MatrixEnd,
+    VecBegin,
+    VecEnd,
+    MSep,
 }
 
 #[derive(Debug, Clone, PartialOrd, PartialEq)]

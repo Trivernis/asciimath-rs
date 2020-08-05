@@ -159,6 +159,7 @@ pub fn get_grouping_mappings() -> Vec<HashMap<TokenPattern, Grouping>> {
             G_RANGLE => Grouping::RAngle,
             G_RXPAR => Grouping::RXPar,
             G_LXPAR => Grouping::LXPar,
+            G_MATRIX_SEP => Grouping::MSep,
         },
         hashmap! {
             G_RPAREN => Grouping::RParen,

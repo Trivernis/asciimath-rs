@@ -103,6 +103,33 @@ mod tests {
     }
 
     #[test]
+    fn it_tokenizes_expressions3() {
+        let expression = "[[1, 2],[3, 4]]";
+        let mut tokenizer = Tokenizer::new(expression.to_string());
+        let tokens = tokenizer.parse();
+        assert_eq!(
+            tokens,
+            vec![
+                Token::Grouping(Grouping::RBracket),
+                Token::Grouping(Grouping::RBracket),
+                Token::Text(Text::Number("1".to_string())),
+                Token::Grouping(Grouping::MSep),
+                Token::Text(Text::Whitespace),
+                Token::Text(Text::Number("2".to_string())),
+                Token::Grouping(Grouping::LBracket),
+                Token::Grouping(Grouping::MSep),
+                Token::Grouping(Grouping::RBracket),
+                Token::Text(Text::Number("3".to_string())),
+                Token::Grouping(Grouping::MSep),
+                Token::Text(Text::Whitespace),
+                Token::Text(Text::Number("4".to_string())),
+                Token::Grouping(Grouping::LBracket),
+                Token::Grouping(Grouping::LBracket),
+            ]
+        );
+    }
+
+    #[test]
     fn it_tokenizes_text1() {
         let expression = "\"just plain text\"";
         let mut tokenizer = Tokenizer::new(expression.to_string());
