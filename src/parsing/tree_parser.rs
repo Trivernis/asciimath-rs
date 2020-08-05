@@ -267,7 +267,6 @@ impl TreeParser {
                     self.step();
                     self.step();
                     expressions.push(self.parse_expression());
-                    self.step();
 
                     if let Token::Grouping(Grouping::LBracket) = self.current_token() {
                         self.step();

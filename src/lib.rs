@@ -349,10 +349,10 @@ mod tests {
     }
 
     #[allow(dead_code)]
-    //#[test]
+    #[test]
     fn it_writes_mathml() {
         let str_expression =
-            "sqrt 1 in NN implies 2^4 + sum_(k = 1)^3 - ((1),(2)) [[2, 3 + 3],[4, 5]]";
+            "alpha sqrt 1 in NN implies 2^4 + sum_(k = 1)^3 - ((1),(2))[[2, 3 + 3],[4, 5]]  + alpha";
         let expression = parse(str_expression.to_string());
         fs::write(
             "test-files/test.html",
@@ -368,7 +368,7 @@ mod tests {
 
     #[bench]
     fn bench_tokenizer(b: &mut Bencher) {
-        let expression = "sum_(iiiiiiiii=1)^n i^3=((n(n+1))/2)^2";
+        let expression = "sqrt 1 in NN implies 2^4 + sum_(k = 1)^3 - ((1),(2)) [[2, 3 + 3],[4, 5]] (((((((nesting)))))))";
         b.iter(|| parse(expression.to_string()));
     }
 }
