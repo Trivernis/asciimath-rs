@@ -1,6 +1,6 @@
 use crate::elements::accent::{Color, ExpressionAccent, GenericAccent, OverSet, UnderSet};
 use crate::elements::group::{
-    Abs, Angles, Braces, Brackets, Ceil, Floor, Group, Matrix, Norm, Parentheses, XGroup,
+    Abs, Angles, Braces, Brackets, Ceil, Floor, Group, Matrix, Norm, Parentheses, Vector, XGroup,
 };
 use crate::elements::literal::{Literal, Number, PlainText, Symbol};
 use crate::elements::special::{
@@ -103,6 +103,8 @@ impl TreeParser {
             Token::Misc(m) => Some(self.parse_misc(m)),
             Token::Grouping(g) => {
                 if let Some(group) = self.parse_matrix() {
+                    Some(Element::Group(group))
+                } else if let Some(group) = self.parse_vector() {
                     Some(Element::Group(group))
                 } else if let Some(group) = self.parse_group(g) {
                     Some(Element::Group(group))
@@ -259,6 +261,7 @@ impl TreeParser {
     fn parse_matrix(&mut self) -> Option<Group> {
         let token = self.current_token().clone();
         let start_index = self.index;
+
         if let Token::Grouping(Grouping::RBracket) = token {
             let mut expressions = Vec::new();
 
@@ -296,7 +299,7 @@ impl TreeParser {
                 .collect::<Vec<Vec<Expression>>>();
 
             // a matrix with no elements is invalid
-            if expression_matrix.len() == 0 {
+            if expression_matrix.is_empty() {
                 self.index = start_index;
                 return None;
             }
@@ -304,12 +307,46 @@ impl TreeParser {
             let first_length = expression_matrix.first().unwrap().len();
             if !expression_matrix.iter().all(|e| e.len() == first_length) {
                 self.index = start_index;
-                return None;
+                None
+            } else {
+                Some(Group::Matrix(Matrix {
+                    inner: expression_matrix,
+                }))
             }
+        } else {
+            None
+        }
+    }
 
-            Some(Group::Matrix(Matrix {
-                inner: expression_matrix,
-            }))
+    fn parse_vector(&mut self) -> Option<Group> {
+        let token = self.current_token().clone();
+        let start_index = self.index;
+
+        if let Token::Grouping(Grouping::RParen) = token {
+            let mut expressions = Vec::new();
+
+            while !self.end_reached() {
+                if let Some(Token::Grouping(Grouping::RParen)) = self.peek() {
+                    self.step();
+                    self.step();
+                    expressions.push(self.parse_expression());
+
+                    if let Token::Grouping(Grouping::LParen) = self.current_token() {
+                        self.step();
+                    }
+                    if let Token::Grouping(Grouping::LParen) = self.current_token() {
+                        break;
+                    }
+                } else {
+                    break;
+                }
+            }
+            if expressions.is_empty() {
+                self.index = start_index;
+                None
+            } else {
+                Some(Group::Vector(Vector { inner: expressions }))
+            }
         } else {
             None
         }

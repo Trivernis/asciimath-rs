@@ -13,6 +13,7 @@ pub enum Group {
     Ceil(Ceil),
     Norm(Norm),
     Matrix(Matrix),
+    Vector(Vector),
 }
 
 #[derive(Debug, Clone, PartialOrd, PartialEq)]
@@ -63,4 +64,9 @@ pub struct Norm {
 #[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub struct Matrix {
     pub inner: Vec<Vec<Expression>>,
+}
+
+#[derive(Debug, Clone, PartialOrd, PartialEq)]
+pub struct Vector {
+    pub inner: Vec<Expression>,
 }

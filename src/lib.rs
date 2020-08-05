@@ -28,7 +28,7 @@ pub fn parse(content: String) -> Expression {
 
 #[cfg(test)]
 mod tests {
-    use crate::elements::group::{Brackets, Group, Matrix};
+    use crate::elements::group::{Brackets, Group, Matrix, Vector};
     use crate::elements::literal::{Literal, Number};
     use crate::elements::special::{Expression, Special, Sum};
     use crate::elements::Element;
@@ -275,12 +275,37 @@ mod tests {
     }
 
     #[test]
+    fn it_parses_vectors() {
+        assert_eq!(
+            parse("((1), (2))".to_string()),
+            Expression {
+                children: vec![Element::Group(Group::Vector(Vector {
+                    inner: vec![
+                        Expression {
+                            children: vec![Element::Literal(Literal::Number(Number {
+                                number: "1".to_string()
+                            }))]
+                        },
+                        Expression {
+                            children: vec![Element::Literal(Literal::Number(Number {
+                                number: "2".to_string()
+                            }))]
+                        }
+                    ]
+                }))]
+            }
+        )
+    }
+
+    //#[test]
     fn it_parses_into_a_tree3() {
         fs::write(
             "test-files/test.txt",
             format!(
                 "{:#?}",
-                parse("color(red)(a) * b^4 - c(c-2) [[1, 3, 2 + 2],[3 - x, 4]".to_string())
+                parse(
+                    "color(red)(a) * b^4 - c(c-2) [[1, 3, 2 + 2],[3 - x, 4] ((2),(3))".to_string()
+                )
             ),
         );
     }
