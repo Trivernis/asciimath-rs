@@ -152,6 +152,7 @@ pub enum Grouping {
     Floor,
     Ceil,
     Norm,
+    MSep,
 }
 
 #[derive(Debug, Clone, PartialOrd, PartialEq)]

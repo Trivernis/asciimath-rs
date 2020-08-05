@@ -2,6 +2,7 @@ use crate::elements::special::Expression;
 
 #[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub enum Group {
+    MSep,
     Parentheses(Parentheses),
     Brackets(Brackets),
     Braces(Braces),
@@ -11,6 +12,8 @@ pub enum Group {
     Floor(Floor),
     Ceil(Ceil),
     Norm(Norm),
+    Matrix(Matrix),
+    Vector(Vector),
 }
 
 #[derive(Debug, Clone, PartialOrd, PartialEq)]
@@ -56,4 +59,14 @@ pub struct Ceil {
 #[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub struct Norm {
     pub inner: Box<Expression>,
+}
+
+#[derive(Debug, Clone, PartialOrd, PartialEq)]
+pub struct Matrix {
+    pub inner: Vec<Vec<Expression>>,
+}
+
+#[derive(Debug, Clone, PartialOrd, PartialEq)]
+pub struct Vector {
+    pub inner: Vec<Vec<Expression>>,
 }

@@ -3,7 +3,7 @@ use crate::utils::Boxed;
 
 #[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub struct Expression {
-    children: Vec<Element>,
+    pub children: Vec<Element>,
 }
 
 #[derive(Debug, Clone, PartialOrd, PartialEq)]

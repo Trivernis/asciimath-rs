@@ -1,6 +1,6 @@
 use crate::elements::accent::{Color, ExpressionAccent, GenericAccent, OverSet, UnderSet};
 use crate::elements::group::{
-    Abs, Angles, Braces, Brackets, Ceil, Floor, Group, Norm, Parentheses, XGroup,
+    Abs, Angles, Braces, Brackets, Ceil, Floor, Group, Matrix, Norm, Parentheses, Vector, XGroup,
 };
 use crate::elements::literal::{Literal, Number, PlainText, Symbol};
 use crate::elements::special::{
@@ -102,7 +102,11 @@ impl TreeParser {
             Token::Operation(op) => Some(self.parse_operation(op)),
             Token::Misc(m) => Some(self.parse_misc(m)),
             Token::Grouping(g) => {
-                if let Some(group) = self.parse_group(g) {
+                if let Some(group) = self.parse_matrix() {
+                    Some(Element::Group(group))
+                } else if let Some(group) = self.parse_vector() {
+                    Some(Element::Group(group))
+                } else if let Some(group) = self.parse_group(g) {
                     Some(Element::Group(group))
                 } else {
                     None
@@ -254,6 +258,84 @@ impl TreeParser {
         }
     }
 
+    fn parse_matrix(&mut self) -> Option<Group> {
+        let token = self.current_token().clone();
+        let start_index = self.index;
+
+        if let Token::Grouping(Grouping::RBracket) = token {
+            let mut expressions = Vec::new();
+
+            while !self.end_reached() {
+                if let Some(Token::Grouping(Grouping::RBracket)) = self.peek() {
+                    self.step();
+                    self.step();
+                    expressions.push(self.parse_expression());
+                    self.step();
+
+                    if let Token::Grouping(Grouping::LBracket) = self.current_token() {
+                        self.step();
+                    }
+                    if let Token::Grouping(Grouping::LBracket) = self.current_token() {
+                        break;
+                    }
+                } else {
+                    break;
+                }
+            }
+            // Remapping the expression into a matrix
+            let expression_matrix = self.transform_vec_to_matrix(expressions);
+
+            if !self.validate_matrix(&expression_matrix) {
+                self.index = start_index;
+                None
+            } else {
+                Some(Group::Matrix(Matrix {
+                    inner: expression_matrix,
+                }))
+            }
+        } else {
+            None
+        }
+    }
+
+    fn parse_vector(&mut self) -> Option<Group> {
+        let token = self.current_token().clone();
+        let start_index = self.index;
+
+        if let Token::Grouping(Grouping::RParen) = token {
+            let mut expressions = Vec::new();
+
+            while !self.end_reached() {
+                if let Some(Token::Grouping(Grouping::RParen)) = self.peek() {
+                    self.step();
+                    self.step();
+                    expressions.push(self.parse_expression());
+
+                    if let Token::Grouping(Grouping::LParen) = self.current_token() {
+                        self.step();
+                    }
+                    if let Token::Grouping(Grouping::LParen) = self.current_token() {
+                        break;
+                    }
+                } else {
+                    break;
+                }
+            }
+            let expression_matrix = self.transform_vec_to_matrix(expressions);
+
+            if !self.validate_matrix(&expression_matrix) {
+                self.index = start_index;
+                None
+            } else {
+                Some(Group::Vector(Vector {
+                    inner: expression_matrix,
+                }))
+            }
+        } else {
+            None
+        }
+    }
+
     fn parse_group(&mut self, token: Grouping) -> Option<Group> {
         match token {
             Grouping::RParen => {
@@ -309,6 +391,7 @@ impl TreeParser {
                 let inner = self.parse_expression().boxed();
                 Some(Group::Norm(Norm { inner }))
             }
+            Grouping::MSep => Some(Group::MSep),
             _ => {
                 self.group_return = true;
                 None
@@ -341,6 +424,38 @@ impl TreeParser {
             }
         } else {
             None
+        }
+    }
+
+    /// Remaps an expresion vector into a matrix of expressions by splitting on each MSep token
+    fn transform_vec_to_matrix(&self, expressions: Vec<Expression>) -> Vec<Vec<Expression>> {
+        expressions
+            .iter()
+            .map(|e| {
+                let children = e.children.clone();
+                let mut expressions = Vec::new();
+
+                for elements in children.split(|e| e == &Element::Group(Group::MSep)) {
+                    expressions.push(Expression {
+                        children: elements.to_vec(),
+                    })
+                }
+                expressions
+            })
+            .collect::<Vec<Vec<Expression>>>()
+    }
+
+    /// Validates a matrix of expressions if every row has the same length
+    fn validate_matrix(&self, matrix: &Vec<Vec<Expression>>) -> bool {
+        if matrix.is_empty() {
+            false
+        } else {
+            let first_length = matrix.first().unwrap().len();
+            if first_length * matrix.len() == 1 {
+                false
+            } else {
+                matrix.iter().all(|e| e.len() == first_length)
+            }
         }
     }
 }
