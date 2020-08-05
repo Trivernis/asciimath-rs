@@ -2,7 +2,7 @@
 name = "asciimath-rs"
 description = "AsciiMath parser"
 repository = "https://github.com/trivernis/asciimath-rs"
-version = "0.3.0"
+version = "0.4.0"
 authors = ["trivernis <trivernis@protonmail.com>"]
 edition = "2018"
 readme = "README.md"
@@ -14,3 +14,4 @@ license-file = "LICENSE"
 charred = "0.3.0"
 maplit = "1.0.2"
 lazy_static = "1.4.0"
+htmlescape = "0.3.1"

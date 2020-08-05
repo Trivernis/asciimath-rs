@@ -73,7 +73,16 @@ impl TreeParser {
 
         while !self.end_reached() {
             if let Some(element) = self.parse_element() {
-                expression.add_child(element);
+                // parse elements that are based on the previous one
+                if let Some(pow) = self.parse_pow_element(&element) {
+                    expression.add_child(Element::Special(Special::Pow(pow)))
+                } else if let Some(frac) = self.parse_frac_element(&element) {
+                    expression.add_child(Element::Special(Special::Frac(frac)))
+                } else if let Some(sub) = self.parse_sub_element(&element) {
+                    expression.add_child(Element::Special(Special::Sub(sub)))
+                } else {
+                    expression.add_child(element);
+                }
             }
             if self.group_return {
                 break;
@@ -214,18 +223,6 @@ impl TreeParser {
 
     fn parse_misc(&mut self, token: Misc) -> Element {
         match token {
-            Misc::Pow => {
-                self.step();
-                Element::Special(Special::Pow(Pow {
-                    exp: self.parse_element().unwrap().boxed(),
-                }))
-            }
-            Misc::Sub => {
-                self.step();
-                Element::Special(Special::Sub(Sub {
-                    lower: self.parse_element().unwrap().boxed(),
-                }))
-            }
             Misc::LatexFrac => {
                 self.step();
                 Element::Special(Special::Frac(Frac {
@@ -422,6 +419,48 @@ impl TreeParser {
             } else {
                 None
             }
+        } else {
+            None
+        }
+    }
+
+    // tries to parse a pow element
+    fn parse_pow_element(&mut self, previous: &Element) -> Option<Pow> {
+        if let Some(Token::Misc(Misc::Pow)) = self.peek() {
+            self.step();
+            self.step();
+            Some(Pow {
+                base: previous.clone().boxed(),
+                exp: self.parse_element().unwrap().boxed(),
+            })
+        } else {
+            None
+        }
+    }
+
+    // tries to parse a sub element
+    fn parse_sub_element(&mut self, previous: &Element) -> Option<Sub> {
+        if let Some(Token::Misc(Misc::Sub)) = self.peek() {
+            self.step();
+            self.step();
+            Some(Sub {
+                base: previous.clone().boxed(),
+                lower: self.parse_element().unwrap().boxed(),
+            })
+        } else {
+            None
+        }
+    }
+
+    // tries to parse an ascii frac
+    fn parse_frac_element(&mut self, previous: &Element) -> Option<Frac> {
+        if let Some(Token::Misc(Misc::AsciiFrac)) = self.peek() {
+            self.step();
+            self.step();
+            Some(Frac {
+                top: previous.clone().boxed(),
+                bottom: self.parse_element().unwrap().boxed(),
+            })
         } else {
             None
         }
