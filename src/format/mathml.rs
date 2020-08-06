@@ -84,12 +84,12 @@ impl ToMathML for PlainText {
     fn to_mathml(&self) -> String {
         if let Some(formatting) = &self.formatting {
             format!(
-                "<mtext mathvariant='{}'/>{}</mtext>",
+                "<mtext mathvariant='{}'>{}</mtext>",
                 formatting.to_mathml(),
                 encode_minimal(self.text.as_str())
             )
         } else {
-            format!("<mtext/>{}</mtext>", encode_minimal(self.text.as_str()))
+            format!("<mtext>{}</mtext>", encode_minimal(self.text.as_str()))
         }
     }
 }
