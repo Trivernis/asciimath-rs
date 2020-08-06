@@ -14,6 +14,7 @@ pub enum Group {
     Norm(Norm),
     Matrix(Matrix),
     Vector(Vector),
+    NonEnclosed(NonEnclosed),
 }
 
 #[derive(Debug, Clone, PartialOrd, PartialEq)]
@@ -69,4 +70,25 @@ pub struct Matrix {
 #[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub struct Vector {
     pub inner: Vec<Vec<Expression>>,
+}
+
+#[derive(Debug, Clone, PartialOrd, PartialEq)]
+pub struct NonEnclosed {
+    pub inner: Box<Expression>,
+}
+
+impl Group {
+    pub(crate) fn to_non_enclosed(&self) -> Option<Self> {
+        let inner = match self {
+            Group::Parentheses(p) => Some(p.inner.clone()),
+            Group::Braces(b) => Some(b.inner.clone()),
+            Group::Brackets(b) => Some(b.inner.clone()),
+            _ => None,
+        };
+        if let Some(inner) = inner {
+            Some(Group::NonEnclosed(NonEnclosed { inner }))
+        } else {
+            None
+        }
+    }
 }

@@ -1,6 +1,7 @@
 use crate::elements::accent::{Color, ExpressionAccent, GenericAccent, OverSet, UnderSet};
 use crate::elements::group::{
-    Abs, Angles, Braces, Brackets, Ceil, Floor, Group, Matrix, Norm, Parentheses, Vector, XGroup,
+    Abs, Angles, Braces, Brackets, Ceil, Floor, Group, Matrix, NonEnclosed, Norm, Parentheses,
+    Vector, XGroup,
 };
 use crate::elements::literal::{Literal, Number, PlainText, Symbol};
 use crate::elements::special::{
@@ -382,6 +383,7 @@ impl ToMathML for Group {
             Group::Ceil(c) => c.to_mathml(),
             Group::Norm(n) => n.to_mathml(),
             Group::Matrix(m) => m.to_mathml(),
+            Group::NonEnclosed(ne) => ne.to_mathml(),
         }
     }
 }
@@ -498,6 +500,12 @@ impl ToMathML for Vector {
                 ))
             ))
         )
+    }
+}
+
+impl ToMathML for NonEnclosed {
+    fn to_mathml(&self) -> String {
+        format!("<mrow>{}</mrow>", self.inner.to_mathml())
     }
 }
 

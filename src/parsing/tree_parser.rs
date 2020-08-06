@@ -400,6 +400,11 @@ impl TreeParser {
             self.step();
             self.step();
             if let Some(element) = self.parse_element() {
+                if let Element::Group(g) = &element {
+                    if let Some(ne) = g.to_non_enclosed() {
+                        return Some(Element::Group(ne).boxed());
+                    }
+                }
                 Some(element.boxed())
             } else {
                 None
@@ -414,6 +419,11 @@ impl TreeParser {
             self.step();
             self.step();
             if let Some(element) = self.parse_element() {
+                if let Element::Group(g) = &element {
+                    if let Some(ne) = g.to_non_enclosed() {
+                        return Some(Element::Group(ne).boxed());
+                    }
+                }
                 Some(element.boxed())
             } else {
                 None
