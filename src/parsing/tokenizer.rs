@@ -36,14 +36,14 @@ impl Tokenizer {
                 tokens.push(Token::Grouping(grouping))
             } else if let Some(arrow) = self.parse_arrows() {
                 tokens.push(Token::Arrow(arrow))
+            } else if let Some(logical) = self.parse_logical() {
+                tokens.push(Token::Logical(logical))
             } else if let Some(relation) = self.parse_relation() {
                 tokens.push(Token::Relation(relation))
             } else if let Some(operation) = self.parse_operation() {
                 tokens.push(Token::Operation(operation))
             } else if let Some(misc) = self.parse_misc() {
                 tokens.push(Token::Misc(misc))
-            } else if let Some(logical) = self.parse_logical() {
-                tokens.push(Token::Logical(logical))
             } else if let Some(accent) = self.parse_accent() {
                 tokens.push(Token::Accent(accent))
             } else if let Some(greek) = self.parse_greek() {

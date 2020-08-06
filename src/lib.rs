@@ -364,7 +364,7 @@ mod tests {
     //#[test]
     fn it_writes_mathml() {
         let str_expression =
-            "alpha sqrt 1 in NN implies 2^4 + sum_(k = 1)^3 - ((1),(2))[[2, 3 + 3],[4, 5]]  + alpha";
+            "alpha sqrt 1 in NN implies 2^4 + <=> sum_(k = 1)^3 - ((1),(2))[[2, 3 + 3],[4, 5]]  + alpha";
         let expression = parse(str_expression.to_string());
         fs::write(
             "test-files/test.html",
