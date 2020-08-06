@@ -2,12 +2,13 @@
 name = "asciimath-rs"
 description = "AsciiMath parser"
 repository = "https://github.com/trivernis/asciimath-rs"
-version = "0.4.3"
+version = "0.4.4"
 authors = ["trivernis <trivernis@protonmail.com>"]
 edition = "2018"
 readme = "README.md"
 license = "Apache-2.0"
 keywords = ["asciimath", "parser", "mathml"]
+categories = ["mathematics", "parser-implementations"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

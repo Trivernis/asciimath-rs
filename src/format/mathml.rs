@@ -12,6 +12,7 @@ use crate::tokens::{
 };
 use htmlescape::{encode_attribute, encode_minimal};
 
+/// Trait to convert the given object into a MathML representation.
 pub trait ToMathML {
     fn to_mathml(&self) -> String;
 }
@@ -654,6 +655,21 @@ impl ToMathML for ExpressionAccent {
 }
 
 impl ToMathML for Expression {
+    /// Recursively converts the Expression into a MathML representation.
+    ///
+    /// The result needs to be enclosed in `<math></math>` elements when used within
+    /// an html file. Currently MathML is only natively supported by Firefox and Safari.
+    ///
+    /// Example:
+    ///
+    ///```
+    /// use asciimath_rs::format::mathml::ToMathML;
+    ///
+    /// fn main() {
+    ///     let expression = asciimath_rs::parse("sin(2x - 1) + 2".to_string());
+    ///     println!("<math>{}</math>", expression.to_mathml());
+    /// }
+    /// ```
     fn to_mathml(&self) -> String {
         format!(
             "<mrow>{}</mrow>",

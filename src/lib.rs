@@ -17,7 +17,19 @@ pub mod parsing;
 pub mod tokens;
 pub(crate) mod utils;
 
-/// Parses the contents of a string into an AsciiMath expression
+/// Parses the contents of a string into an AsciiMath expression.
+///
+/// This function first uses a tokenizer to parse the input string into
+/// a sequence of tokens. Then it uses those tokens with the TreeParser to create
+/// an Expression tree that can then be converted into MathML.
+///
+/// Example:
+///
+/// ```rust
+/// fn main() {
+///     let expression = asciimath_rs::parse("sin(2x) + 3".to_string());
+/// }
+/// ```
 pub fn parse(content: String) -> Expression {
     let mut tokenizer = Tokenizer::new(content);
     let tokens = tokenizer.parse();
