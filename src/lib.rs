@@ -118,7 +118,7 @@ mod tests {
 
     #[test]
     fn it_tokenizes_expressions3() {
-        let expression = "[[1, 2],[3, 4]]";
+        let expression = "[[1, 2],[3, 4]] //";
         let mut tokenizer = Tokenizer::new(expression.to_string());
         let tokens = tokenizer.parse();
         assert_eq!(
@@ -139,6 +139,8 @@ mod tests {
                 Token::Text(Text::Number("4".to_string())),
                 Token::Grouping(Grouping::LBracket),
                 Token::Grouping(Grouping::LBracket),
+                Token::Text(Text::Whitespace),
+                Token::Operation(Operation::Slash),
             ]
         );
     }
