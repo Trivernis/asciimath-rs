@@ -365,7 +365,7 @@ mod tests {
     }
 
     #[allow(dead_code)]
-    #[test]
+    //#[test]
     fn it_writes_mathml() {
         let str_expression =
             "alpha sqrt 1 in NN implies 2^4 + \\\n<=> sum_(k = 1)^3 - ((1),(2))[[2, 3 + 3],[4, 5]]  + alpha";
