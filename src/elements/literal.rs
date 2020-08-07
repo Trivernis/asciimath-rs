@@ -13,6 +13,7 @@ pub enum Literal {
     Arrow(Arrow),
     Misc(Misc),
     Operation(Operation),
+    NewLine,
 }
 
 #[derive(Debug, Clone, PartialOrd, PartialEq)]

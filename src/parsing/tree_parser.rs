@@ -197,6 +197,7 @@ impl TreeParser {
                 text: p,
                 formatting: None,
             })),
+            Text::NewLine => Some(Literal::NewLine),
             _ => None,
         }
     }

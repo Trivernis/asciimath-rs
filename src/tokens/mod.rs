@@ -23,6 +23,7 @@ pub enum Text {
     Symbol(String),
     Plain(String),
     Whitespace,
+    NewLine,
 }
 
 #[derive(Debug, Clone, PartialOrd, PartialEq)]

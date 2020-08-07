@@ -32,6 +32,7 @@ impl ToMathML for Literal {
             Literal::Arrow(a) => a.to_mathml(),
             Literal::Misc(m) => m.to_mathml(),
             Literal::Operation(o) => o.to_mathml(),
+            Literal::NewLine => "<mspace linebreak='newline' />".to_string(),
         }
     }
 }

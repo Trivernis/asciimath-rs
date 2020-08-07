@@ -1,6 +1,6 @@
 use crate::tokens::constants::accents::G_COLOR;
 use crate::tokens::constants::grouping::T_LPAREN;
-use crate::tokens::constants::misc::{A_TEXT, G_NUMALLOWED};
+use crate::tokens::constants::misc::{A_TEXT, G_NEWLINE, G_NUMALLOWED};
 use crate::tokens::constants::TokenPattern;
 use crate::tokens::mappings::{
     get_accent_mappings, get_arrow_mapping, get_font_mappings, get_function_mappings,
@@ -227,6 +227,9 @@ impl Tokenizer {
     }
 
     fn parse_whitespace(&mut self) -> Option<Text> {
+        if self.ctm.check_any_str_sequence(G_NEWLINE) {
+            return Some(Text::NewLine);
+        }
         if self.ctm.get_current().is_whitespace() {
             self.ctm.seek_whitespace();
             self.ctm.rewind(self.ctm.get_index() - 1);

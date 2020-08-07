@@ -41,5 +41,6 @@ pub const A_TEXT: char = '"';
 pub const G_T_TEX: &'static [&str] = &["text"];
 pub const A_NUMCOMMA: char = '.';
 pub const A_SCIEXP: char = 'e';
+pub const G_NEWLINE: &'static [&str] = &["\\\n"];
 
 pub const G_NUMALLOWED: &'static [char] = &[A_NUMCOMMA, A_SCIEXP];

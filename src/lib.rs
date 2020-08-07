@@ -118,7 +118,7 @@ mod tests {
 
     #[test]
     fn it_tokenizes_expressions3() {
-        let expression = "[[1, 2],[3, 4]] //";
+        let expression = "[[1, 2],[3, 4]] // \\\n";
         let mut tokenizer = Tokenizer::new(expression.to_string());
         let tokens = tokenizer.parse();
         assert_eq!(
@@ -141,6 +141,8 @@ mod tests {
                 Token::Grouping(Grouping::LBracket),
                 Token::Text(Text::Whitespace),
                 Token::Operation(Operation::Slash),
+                Token::Text(Text::Whitespace),
+                Token::Text(Text::NewLine),
             ]
         );
     }
@@ -363,10 +365,10 @@ mod tests {
     }
 
     #[allow(dead_code)]
-    //#[test]
+    #[test]
     fn it_writes_mathml() {
         let str_expression =
-            "alpha sqrt 1 in NN implies 2^4 + <=> sum_(k = 1)^3 - ((1),(2))[[2, 3 + 3],[4, 5]]  + alpha";
+            "alpha sqrt 1 in NN implies 2^4 + \\\n<=> sum_(k = 1)^3 - ((1),(2))[[2, 3 + 3],[4, 5]]  + alpha";
         let expression = parse(str_expression.to_string());
         fs::write(
             "test-files/test.html",
