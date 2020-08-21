@@ -40,7 +40,7 @@ pub fn parse(content: String) -> Expression {
 
 #[cfg(test)]
 mod tests {
-    use crate::elements::group::{Brackets, Group, Matrix, Vector};
+    use crate::elements::group::{Brackets, Group, Matrix, Parentheses, Vector};
     use crate::elements::literal::{Literal, Number};
     use crate::elements::special::{Expression, Special, Sum};
     use crate::elements::Element;
@@ -311,7 +311,7 @@ mod tests {
     #[test]
     fn it_parses_vectors() {
         assert_eq!(
-            parse("((1), (2)) - f".to_string()),
+            parse("((1), (2))(1,2) - f".to_string()),
             Expression {
                 children: vec![
                     Element::Group(Group::Vector(Vector {
@@ -327,6 +327,20 @@ mod tests {
                                 }))]
                             }]
                         ]
+                    })),
+                    Element::Group(Group::Parentheses(Parentheses {
+                        inner: Expression {
+                            children: vec![
+                                Element::Literal(Literal::Number(Number {
+                                    number: "1".to_string()
+                                })),
+                                Element::Group(Group::MSep),
+                                Element::Literal(Literal::Number(Number {
+                                    number: "2".to_string()
+                                }))
+                            ]
+                        }
+                        .boxed()
                     })),
                     Element::Literal(Literal::Operation(Operation::Minus)),
                     Element::Literal(Literal::Function(Function::F))

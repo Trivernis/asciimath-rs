@@ -373,7 +373,7 @@ impl ToMathML for Group {
     fn to_mathml(&self) -> String {
         match self {
             Group::Vector(v) => v.to_mathml(),
-            Group::MSep => ",".to_string(),
+            Group::MSep => "<mo>,</mo>".to_string(),
             Group::Parentheses(p) => p.to_mathml(),
             Group::Brackets(b) => b.to_mathml(),
             Group::Braces(b) => b.to_mathml(),
