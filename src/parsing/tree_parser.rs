@@ -144,27 +144,27 @@ impl TreeParser {
         match token {
             Accent::OverSet => {
                 self.step();
-                let top = self.parse_element()?.boxed();
+                let top = self.parse_element()?.to_non_enclosed().boxed();
                 self.step();
-                let bottom = self.parse_element()?.boxed();
+                let bottom = self.parse_element()?.to_non_enclosed().boxed();
                 Some(ExpressionAccent::OverSet(OverSet { top, bottom }))
             }
             Accent::UnderSet => {
                 self.step();
-                let bottom = self.parse_element()?.boxed();
+                let bottom = self.parse_element()?.to_non_enclosed().boxed();
                 self.step();
-                let top = self.parse_element()?.boxed();
+                let top = self.parse_element()?.to_non_enclosed().boxed();
                 Some(ExpressionAccent::UnderSet(UnderSet { top, bottom }))
             }
             Accent::Color(color) => {
                 self.step();
-                let inner = self.parse_element()?.boxed();
+                let inner = self.parse_element()?.to_non_enclosed().boxed();
                 Some(ExpressionAccent::Color(Color { color, inner }))
             }
             _ => {
                 self.step();
                 Some(ExpressionAccent::Generic(GenericAccent {
-                    inner: self.parse_element()?.boxed(),
+                    inner: self.parse_element()?.to_non_enclosed().boxed(),
                     accent: token,
                 }))
             }
