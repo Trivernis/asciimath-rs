@@ -431,7 +431,7 @@ impl TreeParser {
             self.step();
             self.step();
             Some(Pow {
-                base: previous.to_non_enclosed().boxed(),
+                base: previous.clone().boxed(),
                 exp: self.parse_element().unwrap().to_non_enclosed().boxed(),
             })
         } else {
@@ -445,7 +445,7 @@ impl TreeParser {
             self.step();
             self.step();
             Some(Sub {
-                base: previous.to_non_enclosed().boxed(),
+                base: previous.clone().boxed(),
                 lower: self.parse_element().unwrap().to_non_enclosed().boxed(),
             })
         } else {
