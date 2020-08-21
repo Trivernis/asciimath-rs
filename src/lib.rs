@@ -311,22 +311,26 @@ mod tests {
     #[test]
     fn it_parses_vectors() {
         assert_eq!(
-            parse("((1), (2))".to_string()),
+            parse("((1), (2)) - f".to_string()),
             Expression {
-                children: vec![Element::Group(Group::Vector(Vector {
-                    inner: vec![
-                        vec![Expression {
-                            children: vec![Element::Literal(Literal::Number(Number {
-                                number: "1".to_string()
-                            }))]
-                        }],
-                        vec![Expression {
-                            children: vec![Element::Literal(Literal::Number(Number {
-                                number: "2".to_string()
-                            }))]
-                        }]
-                    ]
-                }))]
+                children: vec![
+                    Element::Group(Group::Vector(Vector {
+                        inner: vec![
+                            vec![Expression {
+                                children: vec![Element::Literal(Literal::Number(Number {
+                                    number: "1".to_string()
+                                }))]
+                            }],
+                            vec![Expression {
+                                children: vec![Element::Literal(Literal::Number(Number {
+                                    number: "2".to_string()
+                                }))]
+                            }]
+                        ]
+                    })),
+                    Element::Literal(Literal::Operation(Operation::Minus)),
+                    Element::Literal(Literal::Function(Function::F))
+                ]
             }
         );
         assert_eq!(

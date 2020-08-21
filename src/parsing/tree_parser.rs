@@ -101,6 +101,7 @@ impl TreeParser {
             Token::Logical(l) => Some(Element::Literal(Literal::Logical(l.clone()))),
             Token::Relation(r) => Some(Element::Literal(Literal::Relation(r.clone()))),
             Token::Greek(g) => Some(Element::Literal(Literal::Greek(g.clone()))),
+            Token::Function(f) => Some(Element::Literal(Literal::Function(f.clone()))),
             Token::Text(t) => {
                 if let Some(literal) = self.parse_text(t) {
                     Some(Element::Literal(literal))
