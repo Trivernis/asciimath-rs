@@ -402,12 +402,7 @@ impl TreeParser {
             self.step();
             self.step();
             if let Some(element) = self.parse_element() {
-                if let Element::Group(g) = &element {
-                    if let Some(ne) = g.to_non_enclosed() {
-                        return Some(Element::Group(ne).boxed());
-                    }
-                }
-                Some(element.boxed())
+                Some(element.to_non_enclosed().boxed())
             } else {
                 None
             }
@@ -421,12 +416,7 @@ impl TreeParser {
             self.step();
             self.step();
             if let Some(element) = self.parse_element() {
-                if let Element::Group(g) = &element {
-                    if let Some(ne) = g.to_non_enclosed() {
-                        return Some(Element::Group(ne).boxed());
-                    }
-                }
-                Some(element.boxed())
+                Some(element.to_non_enclosed().boxed())
             } else {
                 None
             }
@@ -441,8 +431,8 @@ impl TreeParser {
             self.step();
             self.step();
             Some(Pow {
-                base: previous.clone().boxed(),
-                exp: self.parse_element().unwrap().boxed(),
+                base: previous.to_non_enclosed().boxed(),
+                exp: self.parse_element().unwrap().to_non_enclosed().boxed(),
             })
         } else {
             None
@@ -455,8 +445,8 @@ impl TreeParser {
             self.step();
             self.step();
             Some(Sub {
-                base: previous.clone().boxed(),
-                lower: self.parse_element().unwrap().boxed(),
+                base: previous.to_non_enclosed().boxed(),
+                lower: self.parse_element().unwrap().to_non_enclosed().boxed(),
             })
         } else {
             None
@@ -469,8 +459,8 @@ impl TreeParser {
             self.step();
             self.step();
             Some(Frac {
-                top: previous.clone().boxed(),
-                bottom: self.parse_element().unwrap().boxed(),
+                top: previous.to_non_enclosed().boxed(),
+                bottom: self.parse_element().unwrap().to_non_enclosed().boxed(),
             })
         } else {
             None

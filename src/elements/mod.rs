@@ -18,3 +18,17 @@ pub enum Element {
 }
 
 impl Boxed for Element {}
+
+impl Element {
+    pub fn to_non_enclosed(&self) -> Self {
+        if let Element::Group(g) = self {
+            if let Some(ne) = g.to_non_enclosed() {
+                Element::Group(ne)
+            } else {
+                Element::Group(g.clone())
+            }
+        } else {
+            self.clone()
+        }
+    }
+}
