@@ -460,7 +460,7 @@ impl TreeParser {
             self.step();
             Some(Frac {
                 top: previous.to_non_enclosed().boxed(),
-                bottom: self.parse_element().unwrap().to_non_enclosed().boxed(),
+                bottom: self.parse_element()?.to_non_enclosed().boxed(),
             })
         } else {
             None

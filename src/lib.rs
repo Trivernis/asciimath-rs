@@ -1,6 +1,3 @@
-#![feature(test)]
-extern crate test;
-
 #[macro_use]
 extern crate maplit;
 
@@ -51,7 +48,6 @@ mod tests {
     use crate::tokens::{Function, Grouping, Misc, Operation, Relation, Text, Token};
     use crate::utils::Boxed;
     use std::fs;
-    use test::Bencher;
 
     #[test]
     fn it_tokenizes_expressions1() {
@@ -398,11 +394,5 @@ mod tests {
             ),
         )
         .unwrap();
-    }
-
-    #[bench]
-    fn bench_tokenizer(b: &mut Bencher) {
-        let expression = "sqrt 1 in NN implies 2^4 + sum_(k = 1)^3 - ((1),(2)) [[2, 3 + 3],[4, 5]] (((((((nesting)))))))";
-        b.iter(|| parse(expression.to_string()));
     }
 }
