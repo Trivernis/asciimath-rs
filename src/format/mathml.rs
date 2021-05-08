@@ -586,8 +586,8 @@ impl ToMathML for Root {
     fn to_mathml(&self) -> String {
         format!(
             "<mroot>{}{}</mroot>",
+            self.inner.to_mathml(),
             self.base.to_mathml(),
-            self.inner.to_mathml()
         )
     }
 }
@@ -696,6 +696,7 @@ impl ToMathML for Element {
             Element::Literal(l) => l.to_mathml(),
             Element::Group(g) => g.to_mathml(),
             Element::Accent(a) => a.to_mathml(),
+            Element::Null => "".to_string(),
         }
     }
 }

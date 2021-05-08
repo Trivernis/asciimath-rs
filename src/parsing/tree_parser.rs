@@ -228,21 +228,21 @@ impl TreeParser {
             Misc::LatexFrac => {
                 self.step();
                 Element::Special(Special::Frac(Frac {
-                    top: self.parse_element().unwrap().boxed(),
-                    bottom: self.parse_element().unwrap().boxed(),
+                    top: self.parse_element().unwrap_or(Element::Null).boxed(),
+                    bottom: self.parse_element().unwrap_or(Element::Null).boxed(),
                 }))
             }
             Misc::Sqrt => {
                 self.step();
                 Element::Special(Special::Sqrt(Sqrt {
-                    inner: self.parse_element().unwrap().boxed(),
+                    inner: self.parse_element().unwrap_or(Element::Null).boxed(),
                 }))
             }
             Misc::Root => {
                 self.step();
-                let base = self.parse_element().unwrap().boxed();
+                let base = self.parse_element().unwrap_or(Element::Null).boxed();
                 self.step();
-                let inner = self.parse_element().unwrap().boxed();
+                let inner = self.parse_element().unwrap_or(Element::Null).boxed();
                 Element::Special(Special::Root(Root { inner, base }))
             }
             Misc::Int => Element::Special(Special::Integral(Integral {
@@ -432,7 +432,11 @@ impl TreeParser {
             self.step();
             Some(Pow {
                 base: previous.clone().boxed(),
-                exp: self.parse_element().unwrap().to_non_enclosed().boxed(),
+                exp: self
+                    .parse_element()
+                    .unwrap_or(Element::Null)
+                    .to_non_enclosed()
+                    .boxed(),
             })
         } else {
             None
@@ -446,7 +450,11 @@ impl TreeParser {
             self.step();
             Some(Sub {
                 base: previous.clone().boxed(),
-                lower: self.parse_element().unwrap().to_non_enclosed().boxed(),
+                lower: self
+                    .parse_element()
+                    .unwrap_or(Element::Null)
+                    .to_non_enclosed()
+                    .boxed(),
             })
         } else {
             None
