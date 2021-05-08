@@ -15,6 +15,7 @@ pub enum Element {
     Special(Special),
     Group(Group),
     Accent(ExpressionAccent),
+    Null,
 }
 
 impl Boxed for Element {}

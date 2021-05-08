@@ -228,5 +228,23 @@ fn it_parses_roots() {
                 .boxed(),
             }))]
         }
+    );
+    // test no fail
+    parse("root 3".to_string());
+}
+
+#[test]
+fn it_parses_functions() {
+    let expr = parse("sin 10".to_string());
+    assert_eq!(
+        expr,
+        Expression {
+            children: vec![
+                Element::Literal(Literal::Function(Function::Sin)),
+                Element::Literal(Literal::Number(Number {
+                    number: "10".to_string()
+                }))
+            ]
+        }
     )
 }

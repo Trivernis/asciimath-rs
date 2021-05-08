@@ -696,6 +696,7 @@ impl ToMathML for Element {
             Element::Literal(l) => l.to_mathml(),
             Element::Group(g) => g.to_mathml(),
             Element::Accent(a) => a.to_mathml(),
+            Element::Null => "".to_string(),
         }
     }
 }
