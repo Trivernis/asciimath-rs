@@ -69,7 +69,7 @@ impl TreeParser {
     }
 
     fn parse_expression(&mut self) -> Expression {
-        let mut expression = Expression::new();
+        let mut expression = Expression::default();
 
         while !self.end_reached() {
             if let Some(element) = self.parse_element() {
@@ -97,18 +97,12 @@ impl TreeParser {
     fn parse_element(&mut self) -> Option<Element> {
         let token = self.current_token().clone();
         match token {
-            Token::Arrow(a) => Some(Element::Literal(Literal::Arrow(a.clone()))),
-            Token::Logical(l) => Some(Element::Literal(Literal::Logical(l.clone()))),
-            Token::Relation(r) => Some(Element::Literal(Literal::Relation(r.clone()))),
-            Token::Greek(g) => Some(Element::Literal(Literal::Greek(g.clone()))),
-            Token::Function(f) => Some(Element::Literal(Literal::Function(f.clone()))),
-            Token::Text(t) => {
-                if let Some(literal) = self.parse_text(t) {
-                    Some(Element::Literal(literal))
-                } else {
-                    None
-                }
-            }
+            Token::Arrow(a) => Some(Element::Literal(Literal::Arrow(a))),
+            Token::Logical(l) => Some(Element::Literal(Literal::Logical(l))),
+            Token::Relation(r) => Some(Element::Literal(Literal::Relation(r))),
+            Token::Greek(g) => Some(Element::Literal(Literal::Greek(g))),
+            Token::Function(f) => Some(Element::Literal(Literal::Function(f))),
+            Token::Text(t) => self.parse_text(t).map(Element::Literal),
             Token::Operation(op) => Some(self.parse_operation(op)),
             Token::Misc(m) => Some(self.parse_misc(m)),
             Token::Grouping(g) => {
@@ -116,26 +110,12 @@ impl TreeParser {
                     Some(Element::Group(group))
                 } else if let Some(group) = self.parse_vector() {
                     Some(Element::Group(group))
-                } else if let Some(group) = self.parse_group(g) {
-                    Some(Element::Group(group))
                 } else {
-                    None
+                    self.parse_group(g).map(Element::Group)
                 }
             }
-            Token::Font(f) => {
-                if let Some(literal) = self.parse_formatted_text(f) {
-                    Some(Element::Literal(literal))
-                } else {
-                    None
-                }
-            }
-            Token::Accent(a) => {
-                if let Some(accent) = self.parse_accent(a) {
-                    Some(Element::Accent(accent))
-                } else {
-                    None
-                }
-            }
+            Token::Font(f) => self.parse_formatted_text(f).map(Element::Literal),
+            Token::Accent(a) => self.parse_accent(a).map(Element::Accent),
             _ => None,
         }
     }
@@ -172,11 +152,7 @@ impl TreeParser {
     }
 
     fn parse_formatted_text(&mut self, token: FontCommand) -> Option<Literal> {
-        let next_token = if let Some(token) = self.peek() {
-            Some(token.clone())
-        } else {
-            None
-        };
+        let next_token = self.peek().cloned();
         if let Some(Token::Text(Text::Plain(p))) = next_token {
             self.step();
             Some(Literal::Text(PlainText {
@@ -205,20 +181,14 @@ impl TreeParser {
 
     fn parse_operation(&mut self, token: Operation) -> Element {
         match token {
-            Operation::Sum => {
-                let mut sum = Sum::new();
-                sum.bottom = self.parse_sub();
-                sum.top = self.parse_pow();
-
-                Element::Special(Special::Sum(sum))
-            }
-            Operation::Prod => {
-                let mut prod = Prod::new();
-                prod.bottom = self.parse_sub();
-                prod.top = self.parse_pow();
-
-                Element::Special(Special::Prod(prod))
-            }
+            Operation::Sum => Element::Special(Special::Sum(Sum {
+                bottom: self.parse_sub(),
+                top: self.parse_pow(),
+            })),
+            Operation::Prod => Element::Special(Special::Prod(Prod {
+                bottom: self.parse_sub(),
+                top: self.parse_pow(),
+            })),
             _ => Element::Literal(Literal::Operation(token)),
         }
     }
@@ -243,7 +213,7 @@ impl TreeParser {
                 let base = self.parse_element().unwrap_or(Element::Null).boxed();
                 self.step();
                 let inner = self.parse_element().unwrap_or(Element::Null).boxed();
-                Element::Special(Special::Root(Root { inner, base }))
+                Element::Special(Special::Root(Root { base, inner }))
             }
             Misc::Int => Element::Special(Special::Integral(Integral {
                 bottom: self.parse_sub(),
@@ -401,11 +371,8 @@ impl TreeParser {
         if let Some(Token::Misc(Misc::Sub)) = self.peek() {
             self.step();
             self.step();
-            if let Some(element) = self.parse_element() {
-                Some(element.to_non_enclosed().boxed())
-            } else {
-                None
-            }
+            self.parse_element()
+                .map(|element| element.to_non_enclosed().boxed())
         } else {
             None
         }
@@ -415,11 +382,8 @@ impl TreeParser {
         if let Some(Token::Misc(Misc::Pow)) = self.peek() {
             self.step();
             self.step();
-            if let Some(element) = self.parse_element() {
-                Some(element.to_non_enclosed().boxed())
-            } else {
-                None
-            }
+            self.parse_element()
+                .map(|element| element.to_non_enclosed().boxed())
         } else {
             None
         }
@@ -494,7 +458,7 @@ impl TreeParser {
     }
 
     /// Validates a matrix of expressions if every row has the same length
-    fn validate_matrix(&self, matrix: &Vec<Vec<Expression>>) -> bool {
+    fn validate_matrix(&self, matrix: &[Vec<Expression>]) -> bool {
         if matrix.is_empty() {
             false
         } else {

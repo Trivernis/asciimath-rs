@@ -1,7 +1,7 @@
 use crate::elements::Element;
 use crate::utils::Boxed;
 
-#[derive(Debug, Clone, PartialOrd, PartialEq)]
+#[derive(Debug, Clone, PartialOrd, PartialEq, Default)]
 pub struct Expression {
     pub children: Vec<Element>,
 }
@@ -19,13 +19,13 @@ pub enum Special {
     OIntegral(OIntegral),
 }
 
-#[derive(Debug, Clone, PartialOrd, PartialEq)]
+#[derive(Debug, Clone, PartialOrd, PartialEq, Default)]
 pub struct Sum {
     pub top: Option<Box<Element>>,
     pub bottom: Option<Box<Element>>,
 }
 
-#[derive(Debug, Clone, PartialOrd, PartialEq)]
+#[derive(Debug, Clone, PartialOrd, PartialEq, Default)]
 pub struct Prod {
     pub top: Option<Box<Element>>,
     pub bottom: Option<Box<Element>>,
@@ -73,33 +73,9 @@ pub struct OIntegral {
 }
 
 impl Expression {
-    pub fn new() -> Self {
-        Self {
-            children: Vec::new(),
-        }
-    }
-
     pub fn add_child(&mut self, child: Element) {
         self.children.push(child)
     }
 }
 
 impl Boxed for Expression {}
-
-impl Sum {
-    pub fn new() -> Self {
-        Self {
-            bottom: None,
-            top: None,
-        }
-    }
-}
-
-impl Prod {
-    pub fn new() -> Self {
-        Self {
-            bottom: None,
-            top: None,
-        }
-    }
-}
