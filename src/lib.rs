@@ -23,9 +23,7 @@ pub(crate) mod utils;
 /// Example:
 ///
 /// ```rust
-/// fn main() {
-///     let expression = asciimath_rs::parse("sin(2x) + 3".to_string());
-/// }
+/// let expression = asciimath_rs::parse("sin(2x) + 3".to_string());
 /// ```
 pub fn parse(content: String) -> Expression {
     let mut tokenizer = Tokenizer::new(content);

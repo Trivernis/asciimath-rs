@@ -85,10 +85,6 @@ impl Group {
             Group::Brackets(b) => Some(b.inner.clone()),
             _ => None,
         };
-        if let Some(inner) = inner {
-            Some(Group::NonEnclosed(NonEnclosed { inner }))
-        } else {
-            None
-        }
+        inner.map(|inner| Group::NonEnclosed(NonEnclosed { inner }))
     }
 }
