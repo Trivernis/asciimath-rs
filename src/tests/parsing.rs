@@ -15,7 +15,7 @@ fn it_parses_into_a_tree1() {
     let tokens = tokenizer.parse();
     let mut tree_parser = TreeParser::new(tokens.clone());
     let expression = tree_parser.parse();
-    let mut test_expression = Expression::new();
+    let mut test_expression = Expression::default();
     test_expression.add_child(Element::Special(Special::Sum(Sum {
         bottom: Some(
             Element::Literal(Literal::Number(Number {

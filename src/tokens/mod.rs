@@ -1,3 +1,7 @@
+use std::fmt;
+use std::fmt::Display;
+use std::fmt::Formatter;
+
 pub mod constants;
 pub mod mappings;
 
@@ -272,15 +276,19 @@ pub enum FontCommand {
     SansSerif,
 }
 
-impl FontCommand {
-    pub fn to_string(&self) -> String {
-        match self {
-            FontCommand::BigOutline => "bbb".to_string(),
-            FontCommand::Big => "bb".to_string(),
-            FontCommand::SansSerif => "sf".to_string(),
-            FontCommand::Fr => "fr".to_string(),
-            FontCommand::TText => "tt".to_string(),
-            FontCommand::Cursive => "cc".to_string(),
-        }
+impl Display for FontCommand {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                FontCommand::BigOutline => "bbb",
+                FontCommand::Big => "bb",
+                FontCommand::SansSerif => "sf",
+                FontCommand::Fr => "fr",
+                FontCommand::TText => "tt",
+                FontCommand::Cursive => "cc",
+            }
+        )
     }
 }

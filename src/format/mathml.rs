@@ -541,7 +541,7 @@ impl ToMathML for Sum {
         } else if let Some(top) = &self.top {
             format!("<mover><mi>&sum;<mi>{}</mover>", top.to_mathml())
         } else {
-            format!("<mi>&sum;</mi>")
+            "<mi>&sum;</mi>".to_string()
         }
     }
 }
@@ -561,7 +561,7 @@ impl ToMathML for Prod {
         } else if let Some(top) = &self.top {
             format!("<mover><mi>&prod;<mi>{}</mover>", top.to_mathml())
         } else {
-            format!("<mi>&prod;</mi>")
+            "<mi>&prod;</mi>".to_string()
         }
     }
 }
@@ -627,7 +627,7 @@ impl ToMathML for Integral {
         } else if let Some(top) = &self.top {
             format!("<mover><mi>&int;<mi>{}</mover>", top.to_mathml())
         } else {
-            format!("<mi>&int;</mi>")
+            "<mi>&int;</mi>".to_string()
         }
     }
 }
@@ -647,7 +647,7 @@ impl ToMathML for OIntegral {
         } else if let Some(top) = &self.top {
             format!("<mover><mi>&conint;<mi>{}</mover>", top.to_mathml())
         } else {
-            format!("<mi>&conint;</mi>")
+            "<mi>&conint;</mi>".to_string()
         }
     }
 }
@@ -674,10 +674,8 @@ impl ToMathML for Expression {
     ///```
     /// use asciimath_rs::format::mathml::ToMathML;
     ///
-    /// fn main() {
-    ///     let expression = asciimath_rs::parse("sin(2x - 1) + 2".to_string());
-    ///     println!("<math>{}</math>", expression.to_mathml());
-    /// }
+    /// let expression = asciimath_rs::parse("sin(2x - 1) + 2".to_string());
+    /// println!("<math>{}</math>", expression.to_mathml());
     /// ```
     fn to_mathml(&self) -> String {
         format!(
