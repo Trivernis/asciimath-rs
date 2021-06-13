@@ -19,14 +19,24 @@ pub struct Tokenizer {
 }
 
 impl Tokenizer {
-    pub fn new(text: String) -> Self {
-        let mut chars = text.chars().collect::<Vec<char>>();
+    /// Creates a new AsciiMath tokenizer with a given input string.
+    /// After creation the parse method can be used to parse a list of tokens
+    /// Example:
+    /// ```
+    /// use asciimath_rs::parsing::tokenizer::Tokenizer;
+    ///
+    /// let mut tokenizer = Tokenizer::new("2^(2-i)");
+    /// let tokens = tokenizer.parse();
+    /// ```
+    pub fn new<S: AsRef<str>>(text: S) -> Self {
+        let mut chars = text.as_ref().chars().collect::<Vec<char>>();
         chars.push('\n');
         Self {
             ctm: CharTapeMachine::new(chars),
         }
     }
 
+    /// Parses the input string passed on creation of the tokenizer into a list of tokens
     pub fn parse(&mut self) -> Vec<Token> {
         let mut tokens = Vec::<Token>::new();
         self.ctm.seek_whitespace();
