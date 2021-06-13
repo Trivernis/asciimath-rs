@@ -22,7 +22,7 @@ pub(crate) mod utils;
 ///
 /// Example:
 ///
-/// ```rust
+/// ```
 /// let expression = asciimath_rs::parse("sin(2x) + 3".to_string());
 /// ```
 pub fn parse<S: AsRef<str>>(content: S) -> Expression {

@@ -17,6 +17,21 @@ pub struct TreeParser {
 }
 
 impl TreeParser {
+    /// Creates a new TreeParser that takes tokens parsed by the Tokenizer. The parse method
+    /// can be used to create the Expression tree.
+    /// Example:
+    /// ```
+    /// use asciimath_rs::parsing::tokenizer::Tokenizer;
+    /// use asciimath_rs::parsing::tree_parser::TreeParser;
+    ///
+    /// // use the tokenizer to create a list of tokens
+    /// let mut tokenizer = Tokenizer::new("2*2");
+    /// let tokens = tokenizer.parse();
+    ///
+    /// // use the tree parser to build the expression tree
+    /// let mut tree_parser = TreeParser::new(tokens);
+    /// tree_parser.parse();
+    /// ```
     pub fn new(tokens: Vec<Token>) -> Self {
         Self {
             tokens,
@@ -25,6 +40,7 @@ impl TreeParser {
         }
     }
 
+    /// Creates an expression tree out of the tokens passed to the TreeParser on creation
     pub fn parse(&mut self) -> Expression {
         self.remove_whitespace();
         self.parse_expression()
