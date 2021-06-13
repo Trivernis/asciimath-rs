@@ -19,8 +19,8 @@ pub struct Tokenizer {
 }
 
 impl Tokenizer {
-    pub fn new(text: String) -> Self {
-        let mut chars = text.chars().collect::<Vec<char>>();
+    pub fn new<S: AsRef<str>>(text: S) -> Self {
+        let mut chars = text.as_ref().chars().collect::<Vec<char>>();
         chars.push('\n');
         Self {
             ctm: CharTapeMachine::new(chars),

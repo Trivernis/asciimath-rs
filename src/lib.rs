@@ -25,7 +25,7 @@ pub(crate) mod utils;
 /// ```rust
 /// let expression = asciimath_rs::parse("sin(2x) + 3".to_string());
 /// ```
-pub fn parse(content: String) -> Expression {
+pub fn parse<S: AsRef<str>>(content: S) -> Expression {
     let mut tokenizer = Tokenizer::new(content);
     let tokens = tokenizer.parse();
     let mut tree_parser = TreeParser::new(tokens);
