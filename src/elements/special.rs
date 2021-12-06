@@ -33,43 +33,43 @@ pub struct Prod {
 
 #[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub struct Frac {
-    pub(crate) top: Box<Element>,
-    pub(crate) bottom: Box<Element>,
+    pub top: Box<Element>,
+    pub bottom: Box<Element>,
 }
 
 #[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub struct Pow {
-    pub(crate) base: Box<Element>,
-    pub(crate) exp: Box<Element>,
+    pub base: Box<Element>,
+    pub exp: Box<Element>,
 }
 
 #[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub struct Sub {
-    pub(crate) base: Box<Element>,
-    pub(crate) lower: Box<Element>,
+    pub base: Box<Element>,
+    pub lower: Box<Element>,
 }
 
 #[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub struct Sqrt {
-    pub(crate) inner: Box<Element>,
+    pub inner: Box<Element>,
 }
 
 #[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub struct Root {
-    pub(crate) base: Box<Element>,
-    pub(crate) inner: Box<Element>,
+    pub base: Box<Element>,
+    pub inner: Box<Element>,
 }
 
 #[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub struct Integral {
-    pub(crate) top: Option<Box<Element>>,
-    pub(crate) bottom: Option<Box<Element>>,
+    pub top: Option<Box<Element>>,
+    pub bottom: Option<Box<Element>>,
 }
 
 #[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub struct OIntegral {
-    pub(crate) top: Option<Box<Element>>,
-    pub(crate) bottom: Option<Box<Element>>,
+    pub top: Option<Box<Element>>,
+    pub bottom: Option<Box<Element>>,
 }
 
 impl Expression {

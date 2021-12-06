@@ -18,16 +18,16 @@ pub enum Literal {
 
 #[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub struct PlainText {
-    pub(crate) text: String,
-    pub(crate) formatting: Option<FontCommand>,
+    pub text: String,
+    pub formatting: Option<FontCommand>,
 }
 
 #[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub struct Symbol {
-    pub(crate) symbol: String,
+    pub symbol: String,
 }
 
 #[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub struct Number {
-    pub(crate) number: String,
+    pub number: String,
 }
